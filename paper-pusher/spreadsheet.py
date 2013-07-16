@@ -4,13 +4,11 @@ import re
 
 
 # 
-def append_excel_worksheet_to_csv(worksheet, csv_file, variable_definitions, excel_header_row_number = 0, include_header = True):
-
-	datemode = worksheet.datemode
+def append_excel_worksheet_to_csv(worksheet, datemode, csv_file, variable_definitions, excel_header_row_number = 0, write_header = True):
 	
 	# this is stuff that should be appeneded to every row
-	region_name = clients_worksheet.region_name
-	case_manager_name = clients_worksheet.case_manager_name
+	#region_name = clients_worksheet.region_name
+	#case_manager_name = clients_worksheet.case_manager_name
 
 	#csv_file = open(csv_file_path, 'a', newline='\n', encoding="utf-8")
 	csv_writer = csv.writer(csv_file)
@@ -18,7 +16,7 @@ def append_excel_worksheet_to_csv(worksheet, csv_file, variable_definitions, exc
 	# get the starting row number based on whether we 
 	# want to print the header or not 
 	excel_starting_row_num = excel_header_row_number	
-	if ! include_header:
+	if not write_header:
 		excel_starting_row_num = excel_header_row_number + 1
 		
 	# header names and column numbers for the csv and Excel file
@@ -33,7 +31,7 @@ def append_excel_worksheet_to_csv(worksheet, csv_file, variable_definitions, exc
 		if row_num >= excel_starting_row_num:
 
 			for variable_name in variable_definitions:
-				col_num = case_file_headers[variable_name]['col_num']
+				col_num = excel_header_column_numbers[variable_name]
 				data_type = variable_definitions[variable_name]['data_type']
 
 				cell_value = worksheet.cell(row_num,col_num).value
@@ -52,7 +50,7 @@ def append_excel_worksheet_to_csv(worksheet, csv_file, variable_definitions, exc
 					
 			# add the composite variables and the 
 			# "Region" and "Case manager" headers
-			if include_header:
+			if write_header:
 				# headers
 				for composite_var_name in settings.composite_variables:
 					row_insert.append(composite_var_name)
@@ -116,14 +114,14 @@ def append_excel_worksheet_to_csv(worksheet, csv_file, variable_definitions, exc
 					else:
 						row_insert.append(None)
 					
-				row_insert.append(region_name)
-				row_insert.append(case_manager_name)
+				#row_insert.append(region_name)
+				#row_insert.append(case_manager_name)
 					
 			# add the row to the csv file
 			csv_writer.writerow(row_insert)
 			
 			# don't include the header after the first row
-			include_header = False
+			write_header = False
 
 	csv_file.close()
 	
@@ -134,7 +132,7 @@ def get_variable_column_numbers(header_row_num, spreadsheet):
 	
 	# Excel worksheet
 	if type(spreadsheet) == xlrd.sheet.Sheet:
-		for column_number in spreadsheet.ncols:
+		for column_number in range(spreadsheet.ncols):
 			header_name = spreadsheet.cell(header_row_num,column_number).value
 			header_name_column_number[header_name] = column_number
 			

@@ -1,5 +1,3 @@
-
-
 class Report():
 	name = None
 	report_variables = []

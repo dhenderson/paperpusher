@@ -1,5 +1,5 @@
 {
-    "Sex female": {
+    "Date of birth": {
         "composite_definition": {
             "Operation": "", 
             "Type": "", 
@@ -7,7 +7,7 @@
                 "Sex"
             ]
         }, 
-        "data_type": "int", 
-        "is_composite": true
+        "data_type": "date", 
+        "is_composite": false
     }
 }
