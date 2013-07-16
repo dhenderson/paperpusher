@@ -1,0 +1,13 @@
+{
+    "Sex female": {
+        "composite_definition": {
+            "Operation": "", 
+            "Type": "", 
+            "variables": [
+                "Sex"
+            ]
+        }, 
+        "data_type": "int", 
+        "is_composite": true
+    }
+}
