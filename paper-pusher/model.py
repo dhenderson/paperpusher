@@ -1,8 +1,10 @@
 class Report():
 	name = None
 	variables = []
+	description = None
+	excel_workbooks = []
 	
-	def __init__(self, name):
+	def __init__(self, name = None):
 		self.name = name
 		
 	def __string__(self):
@@ -24,7 +26,7 @@ class BasicVariable():
 class CompositeVariable(BasicVariable):
 	
 	# list of BasicVariable objects used to create this composite
-	variables_composite_made_of = []
+	variables = []
 	# operation to be executed on the variables
 	composite_method = None
 	
@@ -40,3 +42,13 @@ class CompositeVariable(BasicVariable):
 			date_diff = (newest_date - oldest_date).days
 			return date_diff
 		return None
+		
+class ExcelWorkbookContainer():
+	path = None
+	workbook = None
+	worksheet_index_header_row_num = {}
+	
+	def __init__(self, path, workbook):
+		self.workbook = workbook
+		self.path = path
+		self.generate_csv_file_from_excel_worksheets = {}

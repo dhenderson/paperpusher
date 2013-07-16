@@ -1,13 +1,20 @@
 {
-    "Date of birth": {
-        "composite_definition": {
-            "Operation": "", 
-            "Type": "", 
-            "variables": [
-                "Sex"
-            ]
-        }, 
-        "data_type": "date", 
-        "is_composite": false
-    }
+	"name" : "Test report",
+	"description" : "This is just a test report",
+	"variables" : {
+		"Date of birth": {
+			"composite_definition": {
+				"composite_method": "", 
+				"variables": [
+					"Sex"
+				]
+			}, 
+			"data_type": "date", 
+			"is_composite": false
+		},
+		"Last name" : {
+			"data_type" : "string",
+			"is_composite" : false
+		}
+	}
 }
