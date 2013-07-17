@@ -11,6 +11,11 @@ class Report():
 		
 	def __string__(self):
 		return name
+		
+	def add_variables_by_header_names(self, header_names):
+		for header_name in header_names:
+			variable = BasicVariable(header_name)
+			variables.append(variable)
 
 class BasicVariable():
 	
@@ -18,7 +23,7 @@ class BasicVariable():
 	data_type = None
 	is_transform = False
 	
-	def __init__(self, name, data_type):
+	def __init__(self, name, data_type = None):
 		self.name = name
 		self.data_type = data_type
 		

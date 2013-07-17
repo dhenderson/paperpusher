@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module spreadsheet_helper</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>spreadsheet_helper</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///C:/workspace/paper-pusher/paper-pusher/spreadsheet_helper.py">c:\workspace\paper-pusher\paper-pusher\spreadsheet_helper.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="csv.html">csv</a><br>
+</td><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="xlrd.html">xlrd</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-append_excel_worksheet_to_csv"><strong>append_excel_worksheet_to_csv</strong></a>(excel_worksheet, excel_workbook_datemode, path_to_csv_file, report, excel_header_row_number)</dt><dd><tt>#&nbsp;Appends&nbsp;Excel&nbsp;worksheet&nbsp;values&nbsp;for&nbsp;the&nbsp;variables&nbsp;specified&nbsp;in&nbsp;the&nbsp;given&nbsp;report&nbsp;to&nbsp;a&nbsp;csv&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-cleanup_excel_data"><strong>cleanup_excel_data</strong></a>(variable, cell_value, datemode<font color="#909090">=None</font>)</dt><dd><tt>#&nbsp;cleans&nbsp;up&nbsp;Excel&nbsp;cell&nbsp;values&nbsp;based&nbsp;on&nbsp;the&nbsp;variable's&nbsp;data&nbsp;type</tt></dd></dl>
+ <dl><dt><a name="-excel_date_to_string"><strong>excel_date_to_string</strong></a>(cell_value, datemode)</dt><dd><tt>#&nbsp;Converts&nbsp;an&nbsp;Excel&nbsp;date&nbsp;into&nbsp;the&nbsp;date&nbsp;format&nbsp;m/d/YYYY</tt></dd></dl>
+ <dl><dt><a name="-generate_csv_file_from_excel_worksheets"><strong>generate_csv_file_from_excel_worksheets</strong></a>(path_to_csv_file, report, excel_workbook_containers)</dt><dd><tt>#&nbsp;Compiles&nbsp;a&nbsp;csv&nbsp;file&nbsp;appending&nbsp;an&nbsp;arbitrary&nbsp;number&nbsp;of&nbsp;worksheet&nbsp;contents<br>
+#&nbsp;pulling&nbsp;the&nbsp;variables&nbsp;specified&nbsp;by&nbsp;the&nbsp;Report&nbsp;object</tt></dd></dl>
+ <dl><dt><a name="-generate_csv_file_with_headers"><strong>generate_csv_file_with_headers</strong></a>(path_to_csv_file, report)</dt><dd><tt>#&nbsp;generates&nbsp;and&nbsp;returns&nbsp;a&nbsp;csv&nbsp;file&nbsp;with&nbsp;the&nbsp;headers&nbsp;variable<br>
+#&nbsp;names&nbsp;specified&nbsp;in&nbsp;the&nbsp;passed&nbsp;Report&nbsp;object</tt></dd></dl>
+ <dl><dt><a name="-get_variable_column_numbers"><strong>get_variable_column_numbers</strong></a>(spreadsheet, header_row_num)</dt><dd><tt>#&nbsp;returns&nbsp;a&nbsp;map&nbsp;of&nbsp;the&nbsp;form&nbsp;{header_variable_name&nbsp;:&nbsp;column_number}</tt></dd></dl>
+</td></tr></table>
+</body></html>

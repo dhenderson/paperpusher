@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+
 import json_helper
 import spreadsheet_helper
 import csv
@@ -20,7 +23,6 @@ def test_generate_csv_file_from_excel_worksheets():
 	
 	# csv file path
 	path_to_csv_file = 'test.csv'
-
 	
 	spreadsheet_helper.generate_csv_file_from_excel_worksheets(path_to_csv_file, report, excel_workbook_containers)
 	

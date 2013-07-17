@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>model</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///C:/workspace/paper-pusher/paper-pusher/model.py">c:\workspace\paper-pusher\paper-pusher\model.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="model.html#BasicVariable">BasicVariable</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="model.html#TransformVariable">TransformVariable</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="model.html#ExcelWorkbookContainer">ExcelWorkbookContainer</a>
+</font></dt><dt><font face="helvetica, arial"><a href="model.html#Report">Report</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BasicVariable">class <strong>BasicVariable</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BasicVariable-__init__"><strong>__init__</strong></a>(self, name, data_type<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="BasicVariable-__string__"><strong>__string__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>data_type</strong> = None</dl>
+
+<dl><dt><strong>is_transform</strong> = False</dl>
+
+<dl><dt><strong>name</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ExcelWorkbookContainer">class <strong>ExcelWorkbookContainer</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ExcelWorkbookContainer-__init__"><strong>__init__</strong></a>(self, path, workbook)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>path</strong> = None</dl>
+
+<dl><dt><strong>workbook</strong> = None</dl>
+
+<dl><dt><strong>worksheet_index_header_row_num</strong> = {}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Report">class <strong>Report</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Report-__init__"><strong>__init__</strong></a>(self, name<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Report-__string__"><strong>__string__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Report-add_variables_by_header_names"><strong>add_variables_by_header_names</strong></a>(self, header_names)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>description</strong> = None</dl>
+
+<dl><dt><strong>excel_workbooks</strong> = []</dl>
+
+<dl><dt><strong>name</strong> = None</dl>
+
+<dl><dt><strong>variables</strong> = []</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TransformVariable">class <strong>TransformVariable</strong></a>(<a href="model.html#BasicVariable">BasicVariable</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="model.html#TransformVariable">TransformVariable</a></dd>
+<dd><a href="model.html#BasicVariable">BasicVariable</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TransformVariable-__init__"><strong>__init__</strong></a>(self, name, data_type)</dt></dl>
+
+<dl><dt><a name="TransformVariable-begins_with"><strong>begins_with</strong></a>(self, cell_values, begins_with)</dt><dd><tt>#&nbsp;Returns&nbsp;1&nbsp;if&nbsp;the&nbsp;cell_value&nbsp;begins&nbsp;with&nbsp;the&nbsp;specified&nbsp;string<br>
+#&nbsp;Returns&nbsp;0&nbsp;if&nbsp;it&nbsp;does&nbsp;not<br>
+#&nbsp;Return&nbsp;Null&nbsp;if&nbsp;a&nbsp;cell&nbsp;value&nbsp;is&nbsp;blank</tt></dd></dl>
+
+<dl><dt><a name="TransformVariable-date_diff_days"><strong>date_diff_days</strong></a>(self, oldest_date, newest_date)</dt><dd><tt>#&nbsp;Compares&nbsp;two&nbsp;dates&nbsp;and&nbsp;returns&nbsp;an&nbsp;difference&nbsp;integer&nbsp;in&nbsp;days.<br>
+#&nbsp;Returns&nbsp;null&nbsp;if&nbsp;either&nbsp;date&nbsp;passsed&nbsp;is&nbsp;not&nbsp;of&nbsp;type&nbsp;date</tt></dd></dl>
+
+<dl><dt><a name="TransformVariable-not_empty"><strong>not_empty</strong></a>(self, cell_values)</dt><dd><tt>#&nbsp;Takes&nbsp;a&nbsp;list&nbsp;of&nbsp;cell&nbsp;values&nbsp;and&nbsp;determines&nbsp;if&nbsp;they&nbsp;are&nbsp;empty&nbsp;or&nbsp;not.<br>
+#&nbsp;If&nbsp;one&nbsp;of&nbsp;the&nbsp;cell&nbsp;values&nbsp;passed&nbsp;is&nbsp;empty,&nbsp;returns&nbsp;0,&nbsp;otherwise<br>
+#&nbsp;returns&nbsp;1,&nbsp;indicating&nbsp;the&nbsp;cell&nbsp;values&nbsp;are&nbsp;not&nbsp;empty</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>arguments</strong> = []</dl>
+
+<dl><dt><strong>transform_method</strong> = None</dl>
+
+<dl><dt><strong>variables</strong> = []</dl>
+
+<hr>
+Methods inherited from <a href="model.html#BasicVariable">BasicVariable</a>:<br>
+<dl><dt><a name="TransformVariable-__string__"><strong>__string__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="model.html#BasicVariable">BasicVariable</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="model.html#BasicVariable">BasicVariable</a>:<br>
+<dl><dt><strong>data_type</strong> = None</dl>
+
+<dl><dt><strong>is_transform</strong> = False</dl>
+
+<dl><dt><strong>name</strong> = None</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

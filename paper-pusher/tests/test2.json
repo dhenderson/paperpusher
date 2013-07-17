@@ -1,0 +1,50 @@
+{
+    "description": null, 
+    "name": "Test report", 
+    "variables": {
+        "Birth to last vote": {
+            "data_type": "date", 
+            "is_transform": true, 
+            "transform_definition": {
+                "arguments": [], 
+                "transform_method": "date_diff_days", 
+                "variables": [
+                    "Date of birth", 
+                    "Last date voted"
+                ]
+            }
+        }, 
+        "First name": {
+            "data_type": "string", 
+            "is_transform": false
+        }, 
+        "Has first name": {
+            "data_type": "string", 
+            "is_transform": true, 
+            "transform_definition": {
+                "arguments": [], 
+                "transform_method": "not_empty", 
+                "variables": [
+                    "First name"
+                ]
+            }
+        }, 
+        "Last name": {
+            "data_type": "string", 
+            "is_transform": false
+        }, 
+        "Last name begins with C": {
+            "data_type": "string", 
+            "is_transform": true, 
+            "transform_definition": {
+                "arguments": [
+                    "c"
+                ], 
+                "transform_method": "begins_with", 
+                "variables": [
+                    "Last name"
+                ]
+            }
+        }
+    }
+}
