@@ -1,7 +1,10 @@
 import csv
 import xlrd
 import re
+import datetime
 
+# Compiles a csv file appending an arbitrary number of worksheet contents
+# pulling the variables specified by the Report object
 def generate_csv_file_from_excel_worksheets(path_to_csv_file, report, excel_workbook_containers):
 	
 	# generate a new csv file with the headers from the report
@@ -44,24 +47,24 @@ def append_excel_worksheet_to_csv(excel_worksheet, excel_workbook_datemode, path
 			
 				# get the column number and variable name mapping for the csv file
 				csv_col_num = csv_header_column_numbers[variable.name]
-				excel_col_num = excel_header_column_numbers[variable.name]
-				
-				cell_value = excel_worksheet.cell(excel_row_num,excel_col_num).value
 				
 				# basic variable
-				if not variable.is_composite:
+				if not variable.is_transform:
 					
 					# since this is a basic variable, the header names in the Excel and CSV
 					# will match, so get the Excel variable column number
 					excel_col_num = excel_header_column_numbers[variable.name]
 					
+					cell_value = excel_worksheet.cell(excel_row_num,excel_col_num).value
 					cell_value = cleanup_excel_data(variable, cell_value, excel_workbook_datemode)
 					
-				# composite variable
+				# transform variable
 				else:
-					if variable.data_type == "date":
-						old_date_variable_name = variable.variables_composite_made_of[0]
-						new_date_variable_name = variable.variables_composite_made_of[1]
+					cell_value = None
+					if variable.transform_method == 'date_diff_days':
+
+						old_date_variable_name = variable.variables[0]
+						new_date_variable_name = variable.variables[1]
 						
 						old_date_variable_column_num = excel_header_column_numbers[old_date_variable_name]
 						new_date_variable_column_num = excel_header_column_numbers[new_date_variable_name]
@@ -73,8 +76,36 @@ def append_excel_worksheet_to_csv(excel_worksheet, excel_workbook_datemode, path
 						old_date = cleanup_excel_data(variable, old_date, excel_workbook_datemode)
 						new_date = cleanup_excel_data(variable, new_date, excel_workbook_datemode)
 						
-						if variable.composite_method == 'date_diff_days':
-							cell_value = date_diff_days(old_date, new_date)
+						if old_date != None and new_date != None:
+							# turn the date string into python dates
+							date_one = datetime.datetime.strptime(old_date, "%m/%d/%Y").date()
+							date_two = datetime.datetime.strptime(new_date, "%m/%d/%Y").date()
+						
+							cell_value = variable.date_diff_days(date_one, date_two)
+
+					elif variable.transform_method == 'not_empty':
+						# loop through variables and get values
+						var_cell_vals = []
+						for variable_name in variable.variables:
+							var_col_num = excel_header_column_numbers[variable_name]
+							var_cell_value = excel_worksheet.cell(excel_row_num, var_col_num).value
+							
+							var_cell_vals.append(var_cell_value)
+							
+						cell_value = variable.not_empty(var_cell_vals)
+						
+					elif variable.transform_method == 'begins_with':
+						begins_with = variable.arguments[0]
+						
+						# TODO: cleaup code repition with "not_empty" method above
+						var_cell_vals = []
+						for variable_name in variable.variables:
+							var_col_num = excel_header_column_numbers[variable_name]
+							var_cell_value = excel_worksheet.cell(excel_row_num, var_col_num).value
+							
+							var_cell_vals.append(var_cell_value)
+						
+						cell_value = variable.begins_with(var_cell_vals, begins_with)
 							
 				# insert the cell value in the proper CSV column
 				row_insert.insert(csv_col_num, cell_value)

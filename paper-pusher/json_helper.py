@@ -38,18 +38,22 @@ def load_report_from_json(path_to_json_file):
 	for variable_name in json_data['variables']:
 	
 		# unpack the variable attributes that are 
-		# common for BasicVariable and CompositeVariable classes
-		is_composite = json_data['variables'][variable_name]['is_composite']
+		# common for BasicVariable and TransformVariable classes
+		is_transform = json_data['variables'][variable_name]['is_transform']
 		data_type = json_data['variables'][variable_name]['data_type']
 		
 		variable = None
 		
-		if not is_composite:
+		if not is_transform:
 			variable = BasicVariable(variable_name, data_type)
 		else:
-			variable = CompositeVariable(variable_name, data_type)
-			variable.variables = json_data['variables'][variable_name]['composite_definition']['variables']
-			variable.composite_method = json_data['variables'][variable_name]['composite_definition']['composite_method']
+			variable = TransformVariable(variable_name, data_type)
+			variable.variables = json_data['variables'][variable_name]['transform_definition']['variables']
+			variable.transform_method = json_data['variables'][variable_name]['transform_definition']['transform_method']
+			
+			# if arguments are passed for the transform method, get them
+			if 'arguments' in json_data['variables'][variable_name]['transform_definition']:
+				variable.arguments = json_data['variables'][variable_name]['transform_definition']['arguments']
 		
 		report.variables.append(variable)
 		

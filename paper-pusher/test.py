@@ -2,7 +2,7 @@ import json_helper
 import spreadsheet_helper
 import csv
 import xlrd
-from model import Report, BasicVariable, CompositeVariable, ExcelWorkbookContainer
+from model import Report, BasicVariable, TransformVariable, ExcelWorkbookContainer
 
 def test_generate_csv_file_from_excel_worksheets():
 

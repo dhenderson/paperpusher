@@ -2,19 +2,40 @@
 	"name" : "Test report",
 	"description" : "This is just a test report",
 	"variables" : {
-		"Date of birth": {
-			"composite_definition": {
-				"composite_method": "", 
+		"First name" : {
+			"data_type" : "string",
+			"is_transform" : false
+		},
+		"Birth to last vote": {
+			"transform_definition": {
+				"transform_method": "date_diff_days", 
 				"variables": [
-					"Sex"
+					"Date of birth", "Last date voted"
 				]
 			}, 
 			"data_type": "date", 
-			"is_composite": false
+			"is_transform": true
 		},
 		"Last name" : {
 			"data_type" : "string",
-			"is_composite" : false
+			"is_transform" : false
+		},
+		"Has first name" : {
+			"data_type" : "string",
+			"is_transform" : true,
+			"transform_definition" : {
+				"transform_method": "not_empty", 
+				"variables" : ["First name"]
+			}
+		},
+		"Last name begins with C" : {
+			"data_type" : "string",
+			"is_transform" : true,
+			"transform_definition" : {
+				"transform_method": "begins_with", 
+				"variables" : ["Last name"],
+				"arguments" : ["c"]
+			}
 		}
 	}
 }
