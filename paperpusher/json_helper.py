@@ -1,6 +1,5 @@
 import json
-from paperpusher import models
-from models import *
+from paperpusher.models import *
 
 # Loads the json file at the specified path and returns 
 # the json data model as python lists and dictionaries
