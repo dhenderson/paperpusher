@@ -218,3 +218,20 @@ def cleanup_excel_data(variable, cell_value, datemode = None):
 		cell_value = re.sub(r'[^\d.]+', "", str(cell_value))
 		
 	return cell_value
+	
+def excel_worksheet_to_csv(excel_worksheet, excel_header_row_num, path_to_csv_output):
+	"""Copies the contens of an Excel worksheet into a CSV file
+		Args:
+			excel_worksheet: an xlrd worksheet object
+			excel_header_row_num: the header row number in the worksheet
+			path_to_csv_output: the full path, including "name.csv" where the outputted csv should go
+	"""
+
+	csv_file = open(path_to_csv_output, 'w', newline='')
+	wr = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+
+	for row_num in range(excel_worksheet.nrows):
+		if row_num >= excel_header_row_num:
+			wr.writerow(excel_worksheet.row_values(row_num))
+
+	csv_file.close()
