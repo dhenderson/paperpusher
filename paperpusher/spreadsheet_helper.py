@@ -49,44 +49,57 @@ def append_excel_worksheet_to_csv(excel_workbook_container, worksheet_index, pat
 		if excel_row_num > excel_header_row_number:
 			
 			for variable in report.variables:
-			
+				
 				# get the column number and variable name mapping for the csv file
 				csv_col_num = csv_header_column_numbers[variable.name]
 				
 				# basic variable
 				if not variable.is_transform:
 					
-					# since this is a basic variable, the header names in the Excel and CSV
-					# will match, so get the Excel variable column number
-					excel_col_num = excel_header_column_numbers[variable.name]
+					try:
 					
-					cell_value = excel_worksheet.cell(excel_row_num,excel_col_num).value
-					cell_value = cleanup_excel_data(variable, cell_value, excel_workbook_datemode)
+						# since this is a basic variable, the header names in the Excel and CSV
+						# will match, so get the Excel variable column number
+						
+						excel_col_num = excel_header_column_numbers[variable.name]
+						
+						cell_value = excel_worksheet.cell(excel_row_num,excel_col_num).value
+						cell_value = cleanup_excel_data(variable, cell_value, excel_workbook_datemode)
+						
+					except:
+						# this header key doesn't exist in the spreadsheet, so set the cell value to null
+						cell_value = None
 					
 				# transform variable
 				else:
-					cell_value = None
+					
 					if variable.transform_method == 'date_diff_days':
-
-						old_date_variable_name = variable.variables[0]
-						new_date_variable_name = variable.variables[1]
 						
-						old_date_variable_column_num = excel_header_column_numbers[old_date_variable_name]
-						new_date_variable_column_num = excel_header_column_numbers[new_date_variable_name]
-						
-						old_date = excel_worksheet.cell(excel_row_num, old_date_variable_column_num).value
-						new_date = excel_worksheet.cell(excel_row_num, new_date_variable_column_num).value
-						
-						# cleanup the dates before computing the difference
-						old_date = cleanup_excel_data(variable, old_date, excel_workbook_datemode)
-						new_date = cleanup_excel_data(variable, new_date, excel_workbook_datemode)
-						
-						if old_date != None and new_date != None:
-							# turn the date string into python dates
-							date_one = datetime.datetime.strptime(old_date, "%m/%d/%Y").date()
-							date_two = datetime.datetime.strptime(new_date, "%m/%d/%Y").date()
-						
-							cell_value = variable.date_diff_days(date_one, date_two)
+						try:
+							old_date_variable_name = variable.variables[0]
+							new_date_variable_name = variable.variables[1]
+							
+							old_date_variable_column_num = excel_header_column_numbers[old_date_variable_name]
+							new_date_variable_column_num = excel_header_column_numbers[new_date_variable_name]
+							
+							old_date = excel_worksheet.cell(excel_row_num, old_date_variable_column_num).value
+							new_date = excel_worksheet.cell(excel_row_num, new_date_variable_column_num).value
+							
+							# cleanup the dates before computing the difference
+							old_date = cleanup_excel_data(variable, old_date, excel_workbook_datemode) #TODO a string is getting passed here
+							new_date = cleanup_excel_data(variable, new_date, excel_workbook_datemode)
+							
+							print("old_date: " + old_date)
+							
+							if old_date != None and new_date != None:
+								# turn the date string into python dates
+								date_one = datetime.datetime.strptime(old_date, "%m/%d/%Y").date()
+								date_two = datetime.datetime.strptime(new_date, "%m/%d/%Y").date()
+							
+								cell_value = variable.date_diff_days(date_one, date_two)
+						except:
+							raise
+							cell_value = None
 
 					elif variable.transform_method == 'not_empty':
 						# loop through variables and get values
@@ -166,7 +179,8 @@ def get_variable_column_numbers(spreadsheet, header_row_num):
 	# Excel worksheet
 	if type(spreadsheet) == xlrd.sheet.Sheet:
 		for column_number in range(spreadsheet.ncols):
-			header_name = spreadsheet.cell(header_row_num,column_number).value
+			header_name = spreadsheet.cell(header_row_num,column_number).value.strip().replace('\n', '')
+			print("Added header name: " + header_name)
 			header_name_column_number[header_name] = column_number
 			
 	# otherwise it's a csv file
@@ -200,7 +214,7 @@ def cleanup_excel_data(variable, cell_value, datemode = None):
 		cell_value = excel_date_to_string(cell_value, datemode)
 		
 	# string non-numbers from numeric entries
-	elif variable.data_type == 'numeric':	
+	elif variable.data_type == 'int' or variable.data_type == 'float':	
 		cell_value = re.sub(r'[^\d.]+', "", str(cell_value))
 		
 	return cell_value
