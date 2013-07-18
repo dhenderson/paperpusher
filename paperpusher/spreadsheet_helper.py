@@ -4,7 +4,7 @@ import re
 import datetime
 
 #def generate_csv_file_from_excel_worksheets(path_to_csv_file, report, excel_workbook_containers):
-def generate_csv_file_from_excel_worksheets(path_to_master_csv_file, report, csv_files_container):
+def generate_master_csv(path_to_master_csv_file, report, csv_file_containers):
 	"""
 	Compiles a master csv file appending an arbitrary number of csv file contents
 	pulling the variables specified by the Report object
@@ -13,7 +13,9 @@ def generate_csv_file_from_excel_worksheets(path_to_master_csv_file, report, csv
 	# generate a new csv file with the headers from the report
 	master_csv_file = generate_csv_file_with_headers(path_to_master_csv_file, report)
 	
-	for csv_file_container in CsvFilesContainer:
+	for csv_file_container in csv_file_containers:
+	
+		path_to_input_csv_file = csv_file_container.path
 		# append the contents of this worksheet to the csv file
 		append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, report, csv_file_container.additional_cell_values)
 		
@@ -41,7 +43,8 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 	master_csv_writer = csv.writer(master_csv_file)
 	
 	# get the column numbers for the headers
-	csv_header_column_numbers = get_variable_column_numbers(open(path_to_master_csv_file, 'rt'), 0)
+	input_csv_header_column_numbers = get_variable_column_numbers(open(path_to_input_csv_file, 'rt'), 0)
+	master_csv_header_column_numbers = get_variable_column_numbers(open(path_to_master_csv_file, 'rt'), 0)
 				
 	for input_csv_file_row in input_csv_file_reader:
 		
@@ -49,17 +52,17 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 		master_row_insert = []
 	
 		# skip the first row of the input csv file, as this is the header
-		if input_csv_file_reader.line_num > 0:
-			
+		if input_csv_file_reader.line_num > 1:
+		
 			for variable in report.variables:
-				
-				# get the column number and variable name mapping for the csv file
-				csv_col_num = csv_header_column_numbers[variable.name]
+			
+				master_csv_col_num = master_csv_header_column_numbers[variable.name]
 				
 				# basic variable
 				if not variable.is_transform:
-					
-					cell_value = input_csv_file_row[csv_col_num]
+					# get the column number and variable name mapping for the csv file
+					input_csv_col_num = input_csv_header_column_numbers[variable.name]
+					cell_value = input_csv_file_row[input_csv_col_num]
 					
 				# transform variable
 				else:
@@ -70,11 +73,11 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 							old_date_variable_name = variable.variables[0]
 							new_date_variable_name = variable.variables[1]
 							
-							old_date_variable_column_num = csv_header_column_numbers[old_date_variable_name]
-							new_date_variable_column_num = csv_header_column_numbers[new_date_variable_name]
+							old_date_variable_column_num = input_csv_header_column_numbers[old_date_variable_name]
+							new_date_variable_column_num = input_csv_header_column_numbers[new_date_variable_name]
 							
-							old_date = csv_header_column_numbers[csv_col_num]
-							new_date = csv_header_column_numbers[csv_col_num]
+							old_date = input_csv_file_row[old_date_variable_column_num]
+							new_date = input_csv_file_row[new_date_variable_column_num]
 							
 							if old_date != None and new_date != None:
 								# turn the date string into python dates
@@ -83,17 +86,15 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 							
 								cell_value = variable.date_diff_days(date_one, date_two)
 						except:
-							raise
 							cell_value = None
 
 					elif variable.transform_method == 'not_empty':
 						# loop through variables and get values
 						var_cell_vals = []
 						for variable_name in variable.variables:
-							var_col_num = csv_header_column_numbers[variable_name]
-							var_cell_value = input_csv_file_row[csv_col_num]
-							
-							var_cell_vals.append(var_cell_value)
+							input_csv_col_num = input_csv_header_column_numbers[variable_name]
+							input_var_cell_value = input_csv_file_row[input_csv_col_num]
+							var_cell_vals.append(input_var_cell_value)
 							
 						cell_value = variable.not_empty(var_cell_vals)
 						
@@ -103,15 +104,14 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 						# TODO: cleaup code repition with "not_empty" method above
 						var_cell_vals = []
 						for variable_name in variable.variables:
-							var_col_num = excel_header_column_numbers[variable_name]
-							var_cell_value = input_csv_file_row[csv_col_num]
-							
-							var_cell_vals.append(var_cell_value)
+							input_csv_col_num = input_csv_header_column_numbers[variable_name]
+							input_var_cell_value = input_csv_file_row[input_csv_col_num]
+							var_cell_vals.append(input_var_cell_value)
 						
 						cell_value = variable.begins_with(var_cell_vals, begins_with)
 							
 				# insert the cell value in the proper CSV column
-				master_row_insert.insert(csv_col_num, cell_value)
+				master_row_insert.insert(master_csv_col_num, cell_value)
 			
 			for additional_cell_value in additional_cell_values:
 				master_row_insert.append(additional_cell_value)
@@ -146,8 +146,6 @@ def generate_csv_file_with_headers(path_to_csv_file, report):
 # Converts an Excel date into the date format m/d/YYYY
 def excel_date_to_string(cell_value, datemode):
 	
-	print("cell_value_type: " + str(type(cell_value)))
-
 	# if the type is a float, then conver to date with xldate_as_typle
 	if type(cell_value) is float and cell_value > 1000:
 		date = xlrd.xldate_as_tuple(cell_value, datemode)
@@ -252,8 +250,7 @@ def excel_worksheet_to_csv(excel_worksheet, excel_header_row_number, datemode, p
 						
 					except:
 						# this header key doesn't exist in the spreadsheet, so set the cell value to null
-						cell_value = None	
-						raise
+						cell_value = None
 						
 					insert_row.append(cell_value)
 			csv_writer.writerow(insert_row)

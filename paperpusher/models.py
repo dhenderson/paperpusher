@@ -170,11 +170,11 @@ class TransformVariable(BasicVariable):
 					return 0
 		return 1
 		
-class CsvFilesContainer():
+class CsvFileContainer():
 	
-	def __init__(self):
-		csv_files = [] # list of csv files
-		self.additional_cell_values = [] # list of cell values to append as extra columns at the end of row
+	def __init__(self, path, additional_cell_values = None):
+		self.path = path
+		self.additional_cell_values = additional_cell_values # list of cell values to append as extra columns at the end of each row
 		
 class ExcelWorksheetContainer():	
 	

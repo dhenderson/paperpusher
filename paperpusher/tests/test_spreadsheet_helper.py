@@ -5,7 +5,7 @@ import json_helper
 import spreadsheet_helper
 import csv
 import xlrd
-from models import Report, BasicVariable, TransformVariable, ExcelWorksheetContainer
+from models import Report, BasicVariable, TransformVariable, ExcelWorksheetContainer, CsvFileContainer
 
 
 def get_test_report():
@@ -40,5 +40,18 @@ def test_excel_worksheet_to_csv():
 	
 	print("test_excel_worksheet_to_csv()")
 	
+def test_generate_master_csv():
+	
+	report = get_test_report()
+	path_to_master_csv_file = 'test_master.csv'
+	
+	csv_file_container = CsvFileContainer("test_excel_to_csv.csv", ["True"])
+	
+	spreadsheet_helper.generate_master_csv(path_to_master_csv_file, report, [csv_file_container])
+	
+	print("##test_generate_master_csv##")
+	print("generated " + path_to_master_csv_file)
+	
 if __name__ == "__main__":
 	test_excel_worksheet_to_csv()
+	test_generate_master_csv()
