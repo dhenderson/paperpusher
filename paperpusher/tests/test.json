@@ -16,6 +16,10 @@
 			"data_type": "date", 
 			"is_transform": true
 		},
+		"Date of birth" : {
+			"data_type" : "date",
+			"is_transform" : false
+		},
 		"Last name" : {
 			"data_type" : "string",
 			"is_transform" : false
