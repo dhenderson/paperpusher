@@ -3,9 +3,11 @@ import xlrd
 import re
 import datetime
 
-# Compiles a csv file appending an arbitrary number of worksheet contents
-# pulling the variables specified by the Report object
 def generate_csv_file_from_excel_worksheets(path_to_csv_file, report, excel_workbook_containers):
+	"""
+	Compiles a csv file appending an arbitrary number of worksheet contents
+	pulling the variables specified by the Report object
+	"""
 	
 	# generate a new csv file with the headers from the report
 	csv_file = generate_csv_file_with_headers(path_to_csv_file, report)
@@ -23,11 +25,14 @@ def generate_csv_file_from_excel_worksheets(path_to_csv_file, report, excel_work
 			excel_worksheet = excel_workbook_container.workbook.sheet_by_index(worksheet_index)
 			
 			# append the contents of this worksheet to the csv file
-			append_excel_worksheet_to_csv(excel_worksheet, excel_workbook_container.workbook.datemode, path_to_csv_file, report, excel_header_row_num)
+			append_excel_worksheet_to_csv(excel_workbook_container, worksheet_index, path_to_csv_file, report, excel_header_row_num)
 		
 
 # Appends Excel worksheet values for the variables specified in the given report to a csv file 
-def append_excel_worksheet_to_csv(excel_worksheet, excel_workbook_datemode, path_to_csv_file, report, excel_header_row_number):
+def append_excel_worksheet_to_csv(excel_workbook_container, worksheet_index, path_to_csv_file, report, excel_header_row_number):
+
+	excel_worksheet = excel_workbook_container.workbook.sheet_by_index(worksheet_index)
+	excel_workbook_datemode = excel_workbook_container.workbook.datemode
 
 	csv_file = open(path_to_csv_file, 'a', newline='')
 	csv_writer = csv.writer(csv_file)
@@ -110,6 +115,9 @@ def append_excel_worksheet_to_csv(excel_worksheet, excel_workbook_datemode, path
 				# insert the cell value in the proper CSV column
 				row_insert.insert(csv_col_num, cell_value)
 			
+			for additional_cell_value in excel_workbook_container.additional_cell_values:
+				row_insert.append(additional_cell_value)
+			
 			print("row_insert: " + str(row_insert))
 
 			# write the row
@@ -128,6 +136,9 @@ def generate_csv_file_with_headers(path_to_csv_file, report):
 	
 	for variable in report.variables:
 		csv_headers.append(variable.name)
+		
+	for additional_header_name in report.additional_header_names:
+		csv_headers.append(additional_header_name)
 	
 	csv_writer.writerow(csv_headers)
 	csv_file.close()

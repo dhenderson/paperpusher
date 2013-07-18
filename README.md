@@ -4,9 +4,9 @@ Paper Pusher is a python library that automates common Excel reporting tasks. Pa
 
 Dependencies
 --------------------------
-Python 3+
-xlrd
-pandas
+* Python 3+
+* xlrd
+* pandas
 
 License
 -------------------
