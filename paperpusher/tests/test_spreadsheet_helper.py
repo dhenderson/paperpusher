@@ -44,6 +44,7 @@ def test_generate_master_csv():
 	
 	report = get_test_report()
 	path_to_master_csv_file = 'test_files/test_master.csv'
+	report.path_to_master_csv_file = path_to_master_csv_file
 	
 	csv_file_container = CsvFileContainer("test_files/test_excel_to_csv.csv", ["True"])
 	

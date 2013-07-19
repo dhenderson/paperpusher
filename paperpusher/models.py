@@ -1,5 +1,4 @@
 import datetime
-import settings
 import pandas as pd
 from xlsxwriter.workbook import Workbook
 
@@ -86,7 +85,7 @@ class SummaryVariable():
 				}
 	"""
 	
-	def __init__(self, name, methods = None)
+	def __init__(self, name, methods = None):
 		self.name
 		self.methods 
 		
@@ -102,13 +101,13 @@ class SummaryVariable():
 				the string, returns null.
 		"""
 		
-		if method_name = "min":
+		if method_name == "min":
 			return self.min(data_frame)
-		elif method_name = "max":
+		elif method_name == "max":
 			return self.max(data_frame)
-		elif method_name = "mean":
+		elif method_name == "mean":
 			return self.mean(data_frame)
-		elif method_name = "median":
+		elif method_name == "median":
 			return self.median(data_frame)
 			
 		return None
