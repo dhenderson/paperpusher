@@ -1,4 +1,7 @@
 import datetime
+import settings
+import pandas as pd
+from xlsxwriter.workbook import Workbook
 
 class Report():
 	
@@ -6,14 +9,15 @@ class Report():
 		self.name = name
 		self.variables = []
 		self.description = None
-		self.excel_workbooks = []
 		self.additional_header_names = [] # additional header names not defined in the report.json file, such as an ID or a constant
+		self.summary_sections = []
+		self.path_to_master_csv_file = None # the master CSV to build this report from
 		
 	def __string__(self):
 		return name
 		
 	def add_variables_by_header_names(self, header_names):
-		""" Creates new variables based on header names.
+		"""Creates new variables based on header names.
 		
 			Generates and appends BasicVariable objects to the Report.variables
 			attribute based on a list of header string names.
@@ -24,37 +28,27 @@ class Report():
 			variable = BasicVariable(header_name)
 			variables.append(variable)
 			
-	def write_excel_report(self):
+	def write_excel_summary_report(self):
 
-		report_xlsx = Workbook(settings.report_xlsx)
-		summary_worksheet = report_xlsx.add_worksheet("Summary")
+		workbook = Workbook(self.name + ".xlsx")
 		
-		# get the master csv data set
-		d = pd.read_csv(settings.master_csv)
-		
-		# Table headers
-		summary_worksheet.write(0, 0, '')
-		summary_worksheet.write(0, 1, 'All')
-		starting_region_col_num = 2
-		datasets = {'All' : d}
-		for region_name in settings.region_names:
-			summary_worksheet.write(0, starting_region_col_num, region_name)
-			starting_region_col_num = starting_region_col_num + 1
+		for summary_section in self.summary_sections:
+			worksheet = workbook.add_worksheet(summary_section.name)
 			
-			# get a subset for this region
-			datasets[region_name] = d[d['Region'] == region_name]
-		
-		summary_row = 1
-		summary_column = 0
-		summary_worksheet.write(summary_row, summary_column, 'HOMES ID')
-		for dataset_name in datasets:
-			dataset = datasets[dataset_name]
-			summary_worksheet.write(summary_row, summary_column, str(dataset['HOMES ID'].mean()))
-			summary_column = summary_column + 1
-		summary_row = summary_row + 1
-		
-		return d
-		
+			# get the master csv data set
+			data_frame = pd.read_csv(self.path_to_master_csv_file)
+			
+			for summary_variable in summary_section.variables:
+				
+				for method in summary_variable.methods:
+				
+					method_name = method["method"];
+					#target_value = method["target_value"]
+					#must_be_greater_than_equal_to = method["must_be_greater_than_equal_to"]
+					
+					summary_value = summary_variable.apply_method(data_frame, method_name)
+					
+					
 	def write_doc():
 		doc = open(settings.word_doc, 'w')
 		doc.write("<html><body>")
@@ -63,6 +57,73 @@ class Report():
 		doc.write("<img src='report_images/cat.jpg' />")
 		doc.write("</body></html>")
 		doc.close()
+		
+class SummarySection():
+	"""Variable names and methods for an outputted summary section of a report
+		
+		Attributes:
+			name: Name of the summary section
+			variables: A list of summary variables
+	"""
+	
+	def __init__(self, name, variables = None):
+		self.name = name
+		self.variables = variables
+	
+class SummaryVariable():
+	"""Directions for how to summarize a given varaible
+		
+		Attributes:
+			name = The variable's name
+			methods = A list of dictionaries, with each dictionary
+				defining a method in the form
+				
+				TODO: this is in flux
+				{
+					"method" : method_name,
+					"threshold_value": threshold_value,
+					"must_be_greater_than_equal_to" : true_or_false
+				}
+	"""
+	
+	def __init__(self, name, methods = None)
+		self.name
+		self.methods 
+		
+	def apply_method(self, data_frame, method_name):
+		"""Applied the method specified by string to this variable
+			
+			Args:
+				data_frame: A pandas dataframe object
+				method_name: string representing one of the SummaryVariable analytic methods
+				
+			Returns:
+				Returns the return value of a specified method. If no method matches
+				the string, returns null.
+		"""
+		
+		if method_name = "min":
+			return self.min(data_frame)
+		elif method_name = "max":
+			return self.max(data_frame)
+		elif method_name = "mean":
+			return self.mean(data_frame)
+		elif method_name = "median":
+			return self.median(data_frame)
+			
+		return None
+		
+	def min(self, data_frame):
+		return data_frame[self.name].min()
+		
+	def max(self, data_frame):
+		return data_frame[self.name].max()
+		
+	def mean(self, data_frame):
+		return data_frame[self.name].mean()
+		
+	def median(self, data_frame):
+		return data_frame[self.name].median()
 
 class BasicVariable():
 	"""Model for a basic, non-transformed, variable

@@ -3,7 +3,9 @@ import xlrd
 import re
 import datetime
 
-#def generate_csv_file_from_excel_worksheets(path_to_csv_file, report, excel_workbook_containers):
+def generate_excel_summary_report(report):
+	report.write_excel_summary_report()
+
 def generate_master_csv(path_to_master_csv_file, report, csv_file_containers):
 	"""
 	Compiles a master csv file appending an arbitrary number of csv file contents
@@ -19,9 +21,9 @@ def generate_master_csv(path_to_master_csv_file, report, csv_file_containers):
 		# append the contents of this worksheet to the csv file
 		append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, report, csv_file_container.additional_cell_values)
 		
+	# set the master csv file location in the report
+	report.path_to_master_csv_file
 
-
-#def append_excel_worksheet_to_csv(excel_workbook_container, worksheet_index, path_to_csv_file, report, excel_header_row_number):
 def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, report, additional_cell_values):
 
 	"""Appends a csv file to a master csv file

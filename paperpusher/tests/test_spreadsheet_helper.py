@@ -10,14 +10,14 @@ from models import Report, BasicVariable, TransformVariable, ExcelWorksheetConta
 
 def get_test_report():
 	# load the report
-	report = json_helper.load_report_from_json('test.json')
+	report = json_helper.load_report_from_json('test_files/test.json')
 	# add additional header values
 	report.additional_header_names = ["Is test?"]
 	
 	return report
 
 def get_test_excel_worksheet_container():
-	workbook = xlrd.open_workbook('test.xlsx')
+	workbook = xlrd.open_workbook('test_files/test.xlsx')
 	datemode = workbook.datemode
 	worksheet = workbook.sheet_by_index(0)
 	header_row_number = 1
@@ -29,7 +29,7 @@ def get_test_excel_worksheet_container():
 def test_excel_worksheet_to_csv():
 
 	report = get_test_report()
-	path_to_csv_output = "test_excel_to_csv.csv"
+	path_to_csv_output = "test_files/test_excel_to_csv.csv"
 	excel_worksheet_container = get_test_excel_worksheet_container()
 	
 	excel_header_row_number = excel_worksheet_container.header_row_number
@@ -43,9 +43,9 @@ def test_excel_worksheet_to_csv():
 def test_generate_master_csv():
 	
 	report = get_test_report()
-	path_to_master_csv_file = 'test_master.csv'
+	path_to_master_csv_file = 'test_files/test_master.csv'
 	
-	csv_file_container = CsvFileContainer("test_excel_to_csv.csv", ["True"])
+	csv_file_container = CsvFileContainer("test_files/test_excel_to_csv.csv", ["True"])
 	
 	spreadsheet_helper.generate_master_csv(path_to_master_csv_file, report, [csv_file_container])
 	
