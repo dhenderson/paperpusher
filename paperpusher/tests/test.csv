@@ -1,3 +1,3 @@
-Birth to last vote,First name,Last name begins with C,Last name,Has first name,Is test?
-11148,David,0,Henderson,1,True
-,,1,Cruz,0,True
+First name,Birth to last vote,Last name begins with C,Has first name,Last name,Is test?
+David,11148,0,1,Henderson
+,,1,0,Cruz
