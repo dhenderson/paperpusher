@@ -1,6 +1,7 @@
 import datetime
 import pandas as pd
 from xlsxwriter.workbook import Workbook
+from paperpusher import spreadsheet_helper
 
 class Report():
 	
@@ -62,18 +63,18 @@ class SummarySection():
 		
 		Attributes:
 			name: Name of the summary section
-			variables: A list of summary variables
+			summary_variables: A list of SummaryVariable objects
 	"""
 	
-	def __init__(self, name, variables = None):
+	def __init__(self, name, summary_variables = None):
 		self.name = name
-		self.variables = variables
+		self.summary_variables = summary_variables
 	
 class SummaryVariable():
 	"""Directions for how to summarize a given varaible
 		
 		Attributes:
-			name = The variable's name
+			name = The summary variable's name
 			methods = A list of dictionaries, with each dictionary
 				defining a method in the form
 				
@@ -85,9 +86,11 @@ class SummaryVariable():
 				}
 	"""
 	
-	def __init__(self, name, methods = None):
-		self.name
-		self.methods 
+	def __init__(self, name, methods = None, variables = None):
+		self.name = name
+		self.variables = variables # a list of variables
+		self.methods = methods
+		self.where_clause = {}
 		
 	def apply_method(self, data_frame, method_name):
 		"""Applied the method specified by string to this variable
@@ -100,6 +103,8 @@ class SummaryVariable():
 				Returns the return value of a specified method. If no method matches
 				the string, returns null.
 		"""
+		
+		# TODO: apply the where clause
 		
 		if method_name == "min":
 			return self.min(data_frame)
@@ -123,6 +128,12 @@ class SummaryVariable():
 		
 	def median(self, data_frame):
 		return data_frame[self.name].median()
+	
+	#TODO: impelment these methods
+	def percent_of_total_obs(self, data_frame):
+		return None
+	def percent_of_not_null_obs(self, data_frame):
+		return None
 
 class BasicVariable():
 	"""Model for a basic, non-transformed, variable

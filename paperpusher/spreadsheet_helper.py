@@ -3,9 +3,6 @@ import xlrd
 import re
 import datetime
 
-def generate_excel_summary_report(report):
-	report.write_excel_summary_report()
-
 def generate_master_csv(path_to_master_csv_file, report, csv_file_containers):
 	"""
 	Compiles a master csv file appending an arbitrary number of csv file contents
