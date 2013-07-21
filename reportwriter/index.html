@@ -3,13 +3,15 @@
 		<title>Paper Pusher Report Writer</title>
 		<link href="style.css" media="all" rel="stylesheet" type="text/css" />
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="include/FileSaver.min.js"></script>
-		<script src="reportwriter.js"></script>
+		<script src="lib/FileSaver.min.js"></script>
+		<script src="js/json_helper.js"></script>
+		<script src="js/report.js"></script>
+		<script src="js/variables.js"></script>
 	</head>
 	<body>
 
 		<div class="menu">
-			<span class="menu_button" onclick="save_report_json_file(report_data, document.getElementById('report_name').value)">Save report file</span>
+			<span class="menu_button" onclick="save_report_json_file(report_data, document.getElementById('report_name').value)">Download report file</span>
 		</div>
 		<div class="content">
 			<div>

@@ -1,44 +1,3 @@
-var report_data = {"name" : "New report"}
-
-/**
-* Loads a Paper Pusher report json file.
-* @param {string} path_to_report_file Path to a Paper Pusher json file
-* @return returns a javascript map of a Paper Pusher report
-**/
-function load_report_json_file(path_to_report_file){
-	return JSON.parse(readJSON(path_to_report_file));
-}
-
-/**
-* Downloads a .json file representing a Paper Pusher report
-* data structure
-* @param {map} json_data a Paper Pusher map structure
-* @param {string} report_file_name the name of the report file to be downloaded
-**/
-function save_report_json_file(json_data, report_file_name){
-
-	/**update the report data before saving**/
-	update_report_properties();
-	update_variables();
-	
-	/** convert the report_data into a json string and download the file**/
-	json_string = JSON.stringify(json_data, null, '\t');
-	report_file_name = report_file_name + ".json";
-	var blob = new Blob([json_string], {type: "text/plain;charset=utf-8"});
-	saveAs(blob, report_file_name);
-}
-
-/**
-* Updates the report_data Paper Pusher report elements for 
-* items in the "Report properties" section
-**/
-function update_report_properties(){
-	var report_name = document.getElementById('report_name').value;
-	var report_description = document.getElementById('report_description').value;
-	report_data["name"] = report_name;
-	report_data["description"] = report_description;
-}
-
 function update_variables(){
 	var variables = document.getElementById('variables');
 	report_data["variables"] = {}
@@ -171,7 +130,7 @@ function add_variable(variable_name){
 	variable.appendChild(is_transform);
 	
 	/** remove variable **/
-	var remove_variable = document.createElement('div');
+	var remove_variable = document.createElement('span');
 	remove_variable.setAttribute('onclick','remove_variable("' + variable_id + '")');
 	remove_variable.setAttribute('class','clickable');
 	remove_variable.innerHTML = "[Remove]";
@@ -209,40 +168,55 @@ function set_transform_options(variable_id){
 	transform_options = document.createElement('div');
 	transform_options.setAttribute('id', variable_id + "_transform_options");
 	transform_options.setAttribute('class', "transform_options");
+	
 	variable.appendChild(transform_options);
 	
-	/** variable container **/
-	variable_checkbox_container = document.createElement('div');
-	transform_options.appendChild(variable_checkbox_container);
+	// transform method
+	add_transform_method(variable_id)
+	
+	// add an initiatal transform variable option
+	add_transform_variable_options(report_variables, variable_id); 	
+	
+	// button to add another transform variable
+	var add_another_transform_variable_button = document.createElement('span');
+	add_another_transform_variable_button.setAttribute('class', "clickable");
+	add_another_transform_variable_button.setAttribute('onclick', 'add_transform_variable_options(report_data["variables"], "' + variable_id + '")');
+	add_another_transform_variable_button.innerHTML = "Add another variable";
+	transform_options.appendChild(add_another_transform_variable_button);
+	
+	/** the method to use **/
+	//var method_label = document.createElement('label')
+	//method.innerHTML = "Method (not implemented)";
+	//variable.appendChild(method_label);
+}
+
+function add_transform_variable_options(report_variables, variable_id) {
+
+	var transform_variable_options_container = document.createElement('div');
+	var transform_variable_options = document.createElement('select');
+	var transform_container_id = variable_id + "_transform_options";
+	var transform_container = document.getElementById(transform_container_id);
+	var transform_variable_label = document.createElement('label');
+	
+	transform_variable_label.innerHTML = "Transform variables";
+	transform_variable_options_container.appendChild(transform_variable_label);
 	
 	for (var report_variable_name in report_variables) {
 		var report_variable = report_variables[report_variable_name];
 		var is_transform = report_variable['is_transform'];
 		if(!is_transform){
 			/**non-transformed variable, so add it as a selectable option**/
-			
-			
-			variable_checkbox_name = document.createElement('span');
-			variable_checkbox_name.innerHTML = report_variable_name;
-			
-			variable_checkbox_container.appendChild(variable_checkbox_name);
-			
-			variable_checkbox = document.createElement('input');
-			variable_checkbox.setAttribute('type','checkbox');
-			variable_checkbox.setAttribute('value','checkbox');
-			variable_checkbox.checked = false;
-			variable_checkbox_container.appendChild(variable_checkbox);
+			var transform_option = document.createElement('option');
+			transform_option.innerHTML = report_variable_name;
+			transform_variable_options.appendChild(transform_option);
 			
 			/**TODO: check if this option has been selected already**/
 		}
 	}
-	
-	/** the method to use **/
-	//var method_label = document.createElement('label')
-	//method.innerHTML = "Method (not implemented)";
-	//variable.appendChild(method_label);
-
-	
+	transform_variable_options_container.appendChild(transform_variable_options);
+	transform_container.appendChild(transform_variable_options_container);
+		
+	// add it to the transform container
 }
 
 /**
@@ -254,3 +228,34 @@ function remove_variable(variable_id){
 	var variables_container = document.getElementById('variables');
 	variables_container.removeChild(variable)
 }
+
+function add_transform_method(variable_id) {
+	var transform_container = document.getElementById(variable_id + "_transform_options");
+	var transform_method_container = document.createElement('div');
+	var transform_method = document.createElement('select');
+	var transform_method_label = document.createElement('label');
+	
+	transform_method_label.innerHTML = "Transform method";
+	
+	// date_diff_days
+	var date_diff_days = document.createElement('option');
+	date_diff_days.innerHTML = "date_diff_days";
+	transform_method.appendChild(date_diff_days);
+	
+	// begins_with
+	var begins_with = document.createElement('option');
+	begins_with.innerHTML = "begins_with";
+	transform_method.appendChild(begins_with);
+	
+	// not_null
+	var not_null = document.createElement('option');
+	not_null.innerHTML = "not_null";
+	transform_method.appendChild(not_null);
+	
+	// append
+	transform_method_container.appendChild(transform_method_label);
+	transform_method_container.appendChild(transform_method);
+	transform_container.appendChild(transform_method_container);
+}
+
+
