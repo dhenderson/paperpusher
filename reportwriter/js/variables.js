@@ -26,6 +26,14 @@ function update_variables(){
 		var is_transform_bool = false;
 		if (is_transform_value=="true") {
 			is_transform_bool = true;
+			// get the transform variable options
+			report_data["variables"][variable_name]['transform_definition'] = {};
+			report_data["variables"][variable_name]['transform_definition']['arguments'] = [];
+			
+			var transform_method = document.getElementById(variable_id + "_transform_method");
+			//TODO: report_data["variables"][variable_name]['transform_definition']['transform_method'] = transform_method.options[transform_method.selectedIndex].text;
+			
+			report_data["variables"][variable_name]['transform_definition']['variables'] = [];
 		}
 		report_data["variables"][variable_name]["is_transform"] = is_transform_bool;
 	}
