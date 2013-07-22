@@ -2,40 +2,37 @@ import datetime
 import pandas as pd
 from xlsxwriter.workbook import Workbook
 from paperpusher import spreadsheet
-		
-class SummarySection():
-	"""Variable names and methods for an outputted summary section of a report
-		
-		Attributes:
-			name: Name of the summary section
-			summary_variables: A list of SummaryVariable objects
-	"""
-	
-	def __init__(self, name, summary_variables = None):
-		self.name = name
-		self.summary_variables = summary_variables
 	
 class SummaryVariable():
 	"""Directions for how to summarize a given varaible
 		
 		Attributes:
 			name = The summary variable's name
+			variables = a list of variables
 			methods = A list of dictionaries, with each dictionary
 				defining a method in the form
 				
 				TODO: this is in flux
 				{
-					"method" : method_name,
-					"threshold_value": threshold_value,
-					"must_be_greater_than_equal_to" : true_or_false
+					method : method_name,
+					objective_values: [objective_value],
+					objective_must_be : must_be_string
+				}
+			where = a list of dictionaries with ANDed together WHERE clauses conditions
+				in the following form
+				
+				{
+					variable : variable_name
+					variable_must_be : must_be_string
+					variable_values : [variable_value]
 				}
 	"""
 	
-	def __init__(self, name, methods = None, variables = None):
+	def __init__(self, name, variables = [], methods = [], where = []):
 		self.name = name
 		self.variables = variables # a list of variables
 		self.methods = methods
-		self.where_clause = {}
+		self.where = {}
 		
 	def apply_method(self, data_frame, method_name):
 		"""Applied the method specified by string to this variable
@@ -49,7 +46,8 @@ class SummaryVariable():
 				the string, returns null.
 		"""
 		
-		# TODO: apply the where clause
+		# apply the where clause
+		data_frame = self.apply_where_clause(data_frame)
 		
 		if method_name == "min":
 			return self.min(data_frame)
@@ -62,18 +60,107 @@ class SummaryVariable():
 			
 		return None
 		
+	def apply_where_clause(self, data_frame):
+		if len(self.where) > 0:
+			for where in self.where:
+				where_variable = where['variable']
+				where_variable_must_be = where['variable_must_be']
+				where_values = where['variable_values']
+				
+				if where_variable_must_be == "equal":
+					data_frame = data_frame[data_frame[where_variable] ==  where_values[0]]
+				elif where_variable_must_be == "less_than":
+					data_frame = data_frame[data_frame[where_variable] <  where_values[0]]
+				elif where_variable_must_be == "greater_than_equal_to":
+					data_frame = data_frame[data_frame[where_variable] >=  where_values[0]]
+		
+		return data_frame
+		
+	def get_method_display_name(self, method_name):
+		"""Returns a user friendly display name for the method
+			Args:
+				method_name: a string method name corresponding to a summary method
+			Returns:
+				A friendly method display name
+		"""
+			
+		if method_name == "min":
+			return "Minimum"
+		elif method_name == "max":
+			return "Maximum"
+		elif method_name == "mean":
+			return "Average"
+		elif method_name == "median":
+			return "Median"
+		
+		return method_name
+		
+	def get_objective_display_text(self, objective_must_be, objective_values):
+		"""Returns a display string for the objective requirement
+			Args:
+				objective_must_be: String must_be value
+				objective_values: list of values for the objective
+			Returns:
+				Returns a string description of the objective requirement
+		"""
+		
+		if objective_must_be == "equal":
+			return "Equals " + str(objective_values[0])
+		elif objective_must_be == "greater_than_equal_to":
+			return "At least " + str(objective_values[0])
+		elif objective_must_be == "less_than":
+			return "Less than " + str(objective_values[0])
+		elif objective_must_be == "between":
+			return "Betweeen " + str(objective_values[0]) + " and " +  str(objective_values[1])
+		elif objective_must_be == "in":
+			return "In " + str(objective_values)
+		elif objective_must_be == "not_in":
+			return "Not in " + str(objective_values)
+		return False
+		
+	def objective_met(self, variable_value, objective_values, objective_must_be):
+		"""Determines if an objective was met
+			Args:
+				variable_value: The variable value
+				objective_values: list of values for the objective
+				objective_must_be: String must_be value
+			Returns:
+				True if the objective is met, false otherwise.
+		"""
+	
+		if objective_must_be == "equal":
+			if variable_value == objective_values[0]:
+				return True
+		elif objective_must_be == "greater_than_equal_to":
+			if variable_value >= objective_values[0]:
+				return True
+		elif objective_must_be == "less_than":
+			if variable_value < objective_values[0]:
+				return True
+		elif objective_must_be == "between":
+			if variable_value > objective_values[0] and variable_value > objective_values[1]:
+				return True
+		elif objective_must_be == "in":
+			if variable_value in objective_values:
+				return True
+		elif objective_must_be == "not_in":
+			if variable_value not in objective_values:
+				return True
+		return False
+		
+	
+	# evaluative methods	
 	def min(self, data_frame):
-		return data_frame[self.name].min()
+		return data_frame[self.variables[0]].min()
 		
 	def max(self, data_frame):
-		return data_frame[self.name].max()
+		return data_frame[self.variables[0]].max()
 		
 	def mean(self, data_frame):
-		return data_frame[self.name].mean()
+		return data_frame[self.variables[0]].mean()
 		
 	def median(self, data_frame):
-		return data_frame[self.name].median()
-	
+		return data_frame[self.variables[0]].median()
 	#TODO: impelment these methods
 	def percent_of_total_obs(self, data_frame):
 		return None

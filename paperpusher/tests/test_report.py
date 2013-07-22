@@ -1,8 +1,8 @@
-import test_spreadsheet_helper
+import test_spreadsheet
 
 def test_generate_report():
 
-	report = test_spreadsheet_helper.get_test_report()
+	report = test_spreadsheet.get_test_report()
 	report.generate_report()
 	
 if __name__ == "__main__":

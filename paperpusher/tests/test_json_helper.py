@@ -1,6 +1,5 @@
 import sys
 sys.path.append('../')
-
 import json_helper
 
 def test_save_report_as_json():

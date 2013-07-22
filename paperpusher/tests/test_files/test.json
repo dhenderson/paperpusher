@@ -54,5 +54,42 @@
                 ]
             }
         }
-    }
+    },
+	"summary_sections" : {
+		"Page one" : {
+			"summary_variables" : {
+				"Birth to last vote" : {
+					"variables" : ["Birth to last vote"],
+					"methods" : [
+						{
+							"method" : "mean",
+							"objective_values" : [100],
+							"objective_must_be" : "less_than"
+						},
+						{
+							"method" : "min"
+						},
+						{
+							"method" : "max"
+						}
+					]
+				},
+				"Birth to last vote for David" : {
+					"variables" : ["Birth to last vote"],
+					"methods" : [{
+						"method" : "mean",
+						"objective_values" : [150],
+						"objective_must_be" : "greater_than_equal_to"
+					}],
+					"where" : [
+						{
+							"variable" : "First name",
+							"variable_must_be" : "equal",
+							"variable_values" : ["David"]
+						}
+					]
+				}
+			}
+		}
+	}
 }

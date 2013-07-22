@@ -1,5 +1,6 @@
 import json
-from paperpusher.models import *
+from paperpusher.report import Report, SummarySection
+from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable
 
 # Loads the json file at the specified path and returns 
 # the json data model as python lists and dictionaries
@@ -58,6 +59,22 @@ def load_report_from_json(path_to_json_file):
 		
 		report.variables.append(variable)
 		
+	for summary_section_name in json_data['summary_sections']:
+		summary_section = SummarySection(summary_section_name)
+		
+		for summary_variable_name in json_data['summary_sections'][summary_section_name]['summary_variables']:
+			
+			summary_variable = SummaryVariable(summary_variable_name, 
+					json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['variables'], 
+					json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['methods'])
+										
+			if 'where' in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]:
+				summary_variable.where = json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['where']
+					
+			summary_section.summary_variables.append(summary_variable)
+			
+		report.summary_sections.append(summary_section)
+
 	return report
 	
 def save_report_as_json(path_to_json_file, report):
@@ -72,5 +89,15 @@ def save_report_as_json(path_to_json_file, report):
 			json_data['variables'][variable.name]["transform_definition"]["transform_method"] = variable.transform_method
 			json_data['variables'][variable.name]["transform_definition"]["variables"] = variable.variables
 			json_data['variables'][variable.name]["transform_definition"]["arguments"] = variable.arguments
+			
+	for summary_section in report.summary_sections:
+		json_data['summary_sections'][summary_section.name] =  {}
+		json_data['summary_sections'][summary_section.name]['summary_variables'] =  {}
+		
+		for summary_variable in summary_section.variables:
+			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name] = {}
+			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['variables'] = summary_variable.variables
+			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['methods'] = summary_variable.methods
+			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['where'] = summary_variable.where
 			
 	save_json(path_to_json_file, json_data)

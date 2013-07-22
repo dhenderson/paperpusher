@@ -9,12 +9,12 @@ from variable import BasicVariable, TransformVariable
 from spreadsheet import ExcelWorksheetContainer, CsvFileContainer
 from report import Report
 
-
 def get_test_report():
 	# load the report
 	report = json_helper.load_report_from_json('test_files/test.json')
 	# add additional header values
 	report.additional_header_names = ["Is test?"]
+	report.path_to_master_csv_file = "test_files/test_master.csv"
 	
 	return report
 
