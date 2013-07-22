@@ -2,10 +2,12 @@ import sys
 sys.path.append('../')
 
 import json_helper
-import spreadsheet_helper
+import spreadsheet
 import csv
 import xlrd
-from models import Report, BasicVariable, TransformVariable, ExcelWorksheetContainer, CsvFileContainer
+from variable import BasicVariable, TransformVariable
+from spreadsheet import ExcelWorksheetContainer, CsvFileContainer
+from report import Report
 
 
 def get_test_report():
@@ -36,7 +38,7 @@ def test_excel_worksheet_to_csv():
 	excel_worksheet = excel_worksheet_container.worksheet
 	datemode = excel_worksheet_container.datemode
 		
-	spreadsheet_helper.excel_worksheet_to_csv(excel_worksheet, excel_header_row_number, datemode, path_to_csv_output, report.variables)
+	spreadsheet.excel_worksheet_to_csv(excel_worksheet, excel_header_row_number, datemode, path_to_csv_output, report.variables)
 	
 	print("test_excel_worksheet_to_csv()")
 	
@@ -48,7 +50,7 @@ def test_generate_master_csv():
 	
 	csv_file_container = CsvFileContainer("test_files/test_excel_to_csv.csv", ["True"])
 	
-	spreadsheet_helper.generate_master_csv(path_to_master_csv_file, report, [csv_file_container])
+	spreadsheet.generate_master_csv(path_to_master_csv_file, report, [csv_file_container])
 	
 	print("##test_generate_master_csv##")
 	print("generated " + path_to_master_csv_file)

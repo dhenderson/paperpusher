@@ -255,3 +255,16 @@ def excel_worksheet_to_csv(excel_worksheet, excel_header_row_number, datemode, p
 			csv_writer.writerow(insert_row)
 
 	csv_file.close()
+	
+class CsvFileContainer():
+	
+	def __init__(self, path, additional_cell_values = None):
+		self.path = path
+		self.additional_cell_values = additional_cell_values # list of cell values to append as extra columns at the end of each row
+		
+class ExcelWorksheetContainer():	
+	
+	def __init__(self, worksheet, datemode, header_row_number):
+		self.worksheet = worksheet
+		self.datemode = datemode
+		self.header_row_number = header_row_number
