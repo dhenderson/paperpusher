@@ -1,60 +1,38 @@
-<html>
+<html ng-app>
 	<head>
-		<title>Paper Pusher Report Writer</title>
-		<link href="style.css" media="all" rel="stylesheet" type="text/css" />
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-		<script src="lib/FileSaver.min.js"></script>
-		<script src="js/json_helper.js"></script>
-		<script src="js/report.js"></script>
-		<script src="js/variables.js"></script>
-		<script>
-			$(function() {
-			$( "#tabs" ).tabs();
-			});
-		</script>
+		<script src="js/libs/angular.min.js"></script>
+		<script src="js/libs/bootstrap.js"></script>
+		<script src="js/controllers.js"></script>
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<div class="menu">
-			<span class="menu_button" onclick="save_report_json_file(report_data, document.getElementById('report_name').value)">Download report file</span> 
-			<input type="file" id="files" name="files[]" multiple />
-			<output id="list"></output>
-		</div>
-		<div class="content">
-			<div id="tabs">
-				<ul>
-					<li>
-						<a href="#tabs-1">Report properties</a>
-					</li>
-					<li>
-						<a href="#tabs-2">Variables</a>
-					</li>
-					<li>
-						<a href="#tabs-3">Report configuration</a>
-					</li>
-				</ul>
-				<div id="tabs-1">
-					<h1>Report properties</h1>
-					<label for="report_name">Report name</label>
-					<input type="text" name="report_name" id="report_name" />
-					<label for="report_description">Description</label>
-					<textarea cols="50" rows="5" id="report_description"></textarea>
-				</div>
-				<div id="tabs-2">
-					<h1>Add variables</h2>
-					<label for="add_variables">Add variables separated by line breaks</label>
-					<textarea cols="50" rows="10" id="add_variables"></textarea>
-					<button onclick="add_variables_by_string(document.getElementById('add_variables').value)">Add variables</button>
+		<div ng-controller="ReportController">
+			<form class="form-horizontal">
+			
+				<h1>Report properties</h1>
+				<label>Report name</label> 
+				<input type="text" ng-model="formReportName" ng-model-instant></input>
+				
+				<label>Description</label> 
+				<input type="text" ng-model="formDescriptionText" ng-model-instant></input>
+				
+				<button class="btn" ng-click="save()">Save</button>
+				
+				<h1>Variables</h1>
+				<div ng-repeat="variable in variables">
 					
-					<h1>Manage variables</h2>
-					<div id="variables"></div>
+					<h2>{{variable.name}}</h2>
+					<button class="btn" ng-click="removeVariable(variable.name)">Remove {{variable.name}}</button>
+					
+					<label>Transform variable</label>{{variable.isTransform}}
 				</div>
-				<div id="tabs-3">
-					<h1>Summary variables and objectives</h2>
+				<div>
+					<input type="text" ng-model="newVariableName" ng-model-instant></input>
+					<button class="btn" ng-click="addVariable()">Add variable</button>
 				</div>
-			</div>
+			
+			</form>
 		</div>
 	</body>
 </html>

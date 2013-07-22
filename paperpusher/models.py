@@ -28,8 +28,8 @@ class Report():
 			variable = BasicVariable(header_name)
 			variables.append(variable)
 			
-	def write_excel_summary_report(self):
-
+	def generate_report(self):
+	
 		workbook = Workbook(self.name + ".xlsx")
 		
 		for summary_section in self.summary_sections:
@@ -38,25 +38,28 @@ class Report():
 			# get the master csv data set
 			data_frame = pd.read_csv(self.path_to_master_csv_file)
 			
+			row_num = 0
 			for summary_variable in summary_section.variables:
 				
+				# write the variable name
+				worksheet.write(0, row_num, summary_variable.name)
+				row_num = row_num + 1
+				
+				column_num = 0
 				for method in summary_variable.methods:
 				
+					# get the summary value
 					method_name = method["method"];
-					#target_value = method["target_value"]
-					#must_be_greater_than_equal_to = method["must_be_greater_than_equal_to"]
-					
 					summary_value = summary_variable.apply_method(data_frame, method_name)
 					
+					worksheet.write(column_num, row_num, method_name)
+					column_num + 1
 					
-	def write_doc():
-		doc = open(settings.word_doc, 'w')
-		doc.write("<html><body>")
-		doc.write("<p>This is a paragraph</p>")
-		doc.write("<p>Second paragraph</p>")
-		doc.write("<img src='report_images/cat.jpg' />")
-		doc.write("</body></html>")
-		doc.close()
+					worksheet.write(column_num, row_num, summary_variable.name)
+					column_num + 1
+					
+				row_num = row_num + 2
+					
 		
 class SummarySection():
 	"""Variable names and methods for an outputted summary section of a report
