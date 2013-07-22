@@ -57,10 +57,19 @@ class SummaryVariable():
 			return self.mean(data_frame)
 		elif method_name == "median":
 			return self.median(data_frame)
+		elif method_name == "sum":
+			return self.sum(data_frame)
 			
 		return None
 		
 	def apply_where_clause(self, data_frame):
+		"""Returns a subset of the data frame based on a where clause specification
+			Args:
+				data_frame: Pandas data frame
+			Returns:
+				Subset of pandas data frame. If no where clause, the original data_frame is returned
+		"""
+		
 		if len(self.where) > 0:
 			for where in self.where:
 				where_variable = where['variable']
@@ -92,6 +101,8 @@ class SummaryVariable():
 			return "Average"
 		elif method_name == "median":
 			return "Median"
+		elif method_name == "sum":
+			return "Sum"
 		
 		return method_name
 		
@@ -152,15 +163,15 @@ class SummaryVariable():
 	# evaluative methods	
 	def min(self, data_frame):
 		return data_frame[self.variables[0]].min()
-		
 	def max(self, data_frame):
 		return data_frame[self.variables[0]].max()
-		
 	def mean(self, data_frame):
 		return data_frame[self.variables[0]].mean()
-		
 	def median(self, data_frame):
 		return data_frame[self.variables[0]].median()
+	def sum(self, data_frame):
+		return data_frame[self.variables[0]].sum()
+		
 	#TODO: impelment these methods
 	def percent_of_total_obs(self, data_frame):
 		return None

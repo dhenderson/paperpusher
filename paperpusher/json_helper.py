@@ -90,11 +90,12 @@ def save_report_as_json(path_to_json_file, report):
 			json_data['variables'][variable.name]["transform_definition"]["variables"] = variable.variables
 			json_data['variables'][variable.name]["transform_definition"]["arguments"] = variable.arguments
 			
+	json_data['summary_sections'] = {}
 	for summary_section in report.summary_sections:
 		json_data['summary_sections'][summary_section.name] =  {}
 		json_data['summary_sections'][summary_section.name]['summary_variables'] =  {}
 		
-		for summary_variable in summary_section.variables:
+		for summary_variable in summary_section.summary_variables:
 			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name] = {}
 			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['variables'] = summary_variable.variables
 			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['methods'] = summary_variable.methods

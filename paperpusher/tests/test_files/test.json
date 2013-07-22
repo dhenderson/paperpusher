@@ -88,6 +88,14 @@
 							"variable_values" : ["David"]
 						}
 					]
+				},
+				"Last name begins with C" : {
+					"variables" : ["Last name begins with C"],
+					"methods" : [{
+						"method" : "sum",
+						"objective_values" : [2],
+						"objective_must_be" : "greater_than_equal_to"
+					}]
 				}
 			}
 		}
