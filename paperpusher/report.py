@@ -37,7 +37,7 @@ class Report():
 			worksheet = workbook.add_worksheet(summary_section.name)
 			# get the master csv data set
 			data_frame = pd.read_csv(self.path_to_master_csv_file)
-			
+						
 			row_num = 0
 			col_num = 0
 			
@@ -159,6 +159,10 @@ class SummarySection():
 			summary_variables: A list of SummaryVariable objects
 	"""
 	
-	def __init__(self, name, summary_variables = []):
+	def __init__(self, name, summary_variables = None):
 		self.name = name
+		
+		if summary_variables == None:
+			summary_variables = []
+		
 		self.summary_variables = summary_variables

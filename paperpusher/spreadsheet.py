@@ -112,8 +112,6 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 			for additional_cell_value in additional_cell_values:
 				master_row_insert.append(additional_cell_value)
 			
-			print("row_insert: " + str(master_row_insert))
-
 			# write the row to the master csv
 			master_csv_writer.writerow(master_row_insert)
 
