@@ -3,23 +3,20 @@ import xlrd
 import re
 import datetime
 
-def generate_master_csv(path_to_master_csv_file, report, csv_file_containers):
+def generate_master_csv(report, csv_file_containers):
 	"""
 	Compiles a master csv file appending an arbitrary number of csv file contents
 	pulling the variables specified by the Report object
 	"""
 	
 	# generate a new csv file with the headers from the report
-	master_csv_file = generate_csv_file_with_headers(path_to_master_csv_file, report)
+	master_csv_file = generate_csv_file_with_headers(report.path_to_master_csv_file, report)
 	
 	for csv_file_container in csv_file_containers:
 	
 		path_to_input_csv_file = csv_file_container.path
 		# append the contents of this worksheet to the csv file
-		append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, report, csv_file_container.additional_cell_values)
-		
-	# set the master csv file location in the report
-	report.path_to_master_csv_file
+		append_csv_to_master_csv(path_to_input_csv_file, report.path_to_master_csv_file, report, csv_file_container.additional_cell_values)
 
 def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, report, additional_cell_values):
 

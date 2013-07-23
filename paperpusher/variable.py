@@ -59,6 +59,12 @@ class SummaryVariable():
 			return self.median(data_frame)
 		elif method_name == "sum":
 			return self.sum(data_frame)
+		elif method_name == "percent_of_sum":
+			return self.percent_of_sum(data_frame)
+		elif method_name == "percent_of_average":
+			return self.percent_of_average(data_frame)
+		elif method_name == "percent_of_obs":
+			return self.percent_of_obs(data_frame)
 			
 		return None
 		
@@ -103,6 +109,10 @@ class SummaryVariable():
 			return "Median"
 		elif method_name == "sum":
 			return "Sum"
+		elif method_name == "percent_of_sum" or method_name == "percent_of_average":
+			return "Percent of " + self.variables[1]
+		elif method_name == "percent_of_obs":
+			return "Percent of observations"
 		
 		return method_name
 		
@@ -171,12 +181,31 @@ class SummaryVariable():
 		return data_frame[self.variables[0]].median()
 	def sum(self, data_frame):
 		return data_frame[self.variables[0]].sum()
+	def percent_of_sum(self, data_frame):
+		"""Returns sum of variable[0] divided by sum of variable[1]
+		"""
 		
-	#TODO: impelment these methods
-	def percent_of_total_obs(self, data_frame):
-		return None
-	def percent_of_not_null_obs(self, data_frame):
-		return None
+		sum_variable_one = data_frame[self.variables[0]].sum()
+		sum_variable_two = data_frame[self.variables[1]].sum()
+		
+		return (sum_variable_one/sum_variable_two)*100
+
+	def percent_of_average(self, data_frame):
+		"""Returns the average of variable[0] divided by average of variable[1]
+		"""
+		
+		average_variable_one = data_frame[self.variables[0]].mean()
+		average_variable_two = data_frame[self.variables[1]].mean()
+		
+		return (average_variable_one/average_variable_two)*100
+		
+	def percent_of_obs(self, data_frame):
+		"""Returns the sum of variable[0] divided by the number of observations
+		"""
+		sum_variable_one = data_frame[self.variables[0]].sum()
+		observations = len(data_frame.index)
+		
+		return (sum_variable_one/observations)*100
 
 class BasicVariable():
 	"""Model for a basic, non-transformed, variable

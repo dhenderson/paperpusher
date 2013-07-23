@@ -11,7 +11,7 @@ class Report():
 		self.description = None
 		self.additional_header_names = [] # additional header names not defined in the report.json file, such as an ID or a constant
 		self.summary_sections = []
-		self.path_to_master_csv_file = None # the master CSV to build this report from
+		self.path_to_master_csv_file = "." # the master CSV to build this report from
 		
 	def __string__(self):
 		return name
