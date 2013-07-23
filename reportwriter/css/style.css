@@ -5,7 +5,10 @@ h2{font-size: 1.2em;}
 
 label {display: inline;}
 
-.navigation-panel {width: 300px; border-right: 1px solid #CCC; float: left; overflow-y: scroll; position: fixed;}
+.navigation-panel {width: 270px; border: 1px solid #AAA; background-color: #EEEEFF; padding: 10px; float: left; overflow-y: scroll; position: fixed;}
+.navigation-panel a{text-decoration: none; padding: 5px;}
+.navigation-panel a:hover{background-color: #FFAAAA;}
+
 .right-pane {margin-left: 320px;}
 
 .variable{padding: 10px; border: 1px solid #CCC; margin-bottom: 10px; background-color: #EEE;}

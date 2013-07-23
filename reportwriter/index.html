@@ -10,7 +10,7 @@
 		<div ng-controller="ReportController">
 			<div class="navigation-panel">
 				<h1>Navigation</h1>
-				<h2>Variables</h2>
+				<h2><a href="#variables">Variables</a></h2>
 				<ul ng-repeat="variable in variables">
 					<li><a href="#{{variable.name}}">{{variable.name}}</a></li>
 				</ul>
@@ -27,7 +27,7 @@
 					
 					<button class="btn" ng-click="save()">Save</button>
 					
-					<h1>Variables</h1>
+					<h1 id="variables">Variables</h1>
 					<div ng-repeat="variable in variables" class="variable transform-{{variable.isTransform}}">
 						
 						<h2 id="{{variable.name}}">
