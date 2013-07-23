@@ -1,38 +1,63 @@
 <html ng-app>
 	<head>
 		<script src="js/libs/angular.min.js"></script>
-		<script src="js/libs/bootstrap.js"></script>
+		<!--<script src="js/libs/bootstrap.js"></script>-->
 		<script src="js/controllers.js"></script>
-		<link rel="stylesheet" href="css/bootstrap.css">
+		<!--<link rel="stylesheet" href="css/bootstrap.css">-->
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
 		<div ng-controller="ReportController">
-			<form class="form-horizontal">
-			
-				<h1>Report properties</h1>
-				<label>Report name</label> 
-				<input type="text" ng-model="formReportName" ng-model-instant></input>
+			<div class="navigation-panel">
+				<h1>Navigation</h1>
+				<h2>Variables</h2>
+				<ul ng-repeat="variable in variables">
+					<li><a href="#{{variable.name}}">{{variable.name}}</a></li>
+				</ul>
+			</div>
+			<div class="right-pane">
+				<form class="form-horizontal">
 				
-				<label>Description</label> 
-				<input type="text" ng-model="formDescriptionText" ng-model-instant></input>
-				
-				<button class="btn" ng-click="save()">Save</button>
-				
-				<h1>Variables</h1>
-				<div ng-repeat="variable in variables">
+					<h1>Report properties</h1>
+					<label>Report name</label> 
+					<input type="text" ng-model="formReportName" ng-model-instant></input>
 					
-					<h2>{{variable.name}}</h2>
-					<button class="btn" ng-click="removeVariable(variable.name)">Remove {{variable.name}}</button>
+					<label>Description</label> 
+					<input type="text" ng-model="formDescriptionText" ng-model-instant></input>
 					
-					<label>Transform variable</label>{{variable.isTransform}}
-				</div>
-				<div>
-					<input type="text" ng-model="newVariableName" ng-model-instant></input>
-					<button class="btn" ng-click="addVariable()">Add variable</button>
-				</div>
-			
-			</form>
+					<button class="btn" ng-click="save()">Save</button>
+					
+					<h1>Variables</h1>
+					<div ng-repeat="variable in variables" class="variable transform-{{variable.isTransform}}">
+						
+						<h2 id="{{variable.name}}">
+							{{variable.name}} 
+							<span ng-show="variable.isTransform">
+								(Transformation)
+							</span> 
+							<button class="btn" ng-click="removeVariable(variable.name)">Remove {{variable.name}}</button>
+						</h2>
+						
+						
+						<label>Data type</label>
+						<select ng-model="variable.dataType" ng-options="item.dataType as item.displayValue for item in dataTypeOptions"></select>
+						
+						<label>Transform variable</label>
+						<select ng-model="variable.isTransform" ng-options="item.isTransform as item.displayValue for item in isTransformOptions"></select>
+						
+						<div ng-show="variable.isTransform">
+							<label>Method</label>
+							<select ng-model="variable.transformDefinition.transformMethod" ng-options="item.transformMethod as item.displayValue for item in transformMethodOptions"></select>
+						</div>
+
+					</div>
+					<div>
+						<input type="text" ng-model="newVariableName" ng-model-instant></input>
+						<button class="btn" ng-click="addVariable()">Add variable</button>
+					</div>
+				
+				</form>
+			</div>
 		</div>
 	</body>
 </html>

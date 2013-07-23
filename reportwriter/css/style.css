@@ -1,1 +1,14 @@
-html {padding: 10px;}
+body {padding: 10px; font-size: 8pt; font-family: verdana, arial;}
+
+h1{font-size: 1.4em;}
+h2{font-size: 1.2em;}
+
+label {display: inline;}
+
+.navigation-panel {width: 300px; border-right: 1px solid #CCC; float: left; overflow-y: scroll; position: fixed;}
+.right-pane {margin-left: 320px;}
+
+.variable{padding: 10px; border: 1px solid #CCC; margin-bottom: 10px; background-color: #EEE;}
+.variable h2 {margin-top: 0px}
+
+.transform-true{background-color: #FFFFAA}

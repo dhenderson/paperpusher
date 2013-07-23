@@ -131,7 +131,7 @@ class Report():
 						row_num = row_num + 1
 						col_num = 1
 				
-				row_num = row_num + 2
+				row_num = row_num + 1
 				
 		# insert the raw data worksheet as the last worksheet in the workbook
 		self.insert_raw_data_worksheet("Raw data", workbook)
