@@ -3,6 +3,7 @@ function ReportController($scope) {
 	$scope.report_name = null;
 	$scope.description = null;
 	$scope.variables = {};
+	$scope.summarySections = {}
 	
 	$scope.isTransformOptions = [
 				{isTransform : false, displayValue : 'Use this variable as is' },       
@@ -12,7 +13,7 @@ function ReportController($scope) {
 				{dataType : 'int', displayValue : 'Integer'},       
 				{dataType : 'float', displayValue : 'Float'},
 				{dataType : 'string', displayValue : 'Text'},
-				{dataType : 'boolean', displayValue : 'True or false'},
+				{dataType : 'boolean', displayValue : 'Boolean'},
 				{dataType : 'date', displayValue : 'Date'}
 			];
 			
@@ -36,13 +37,22 @@ function ReportController($scope) {
 		variableName:$scope.newVariableName = null;
 	}
 	
+	$scope.removeVariable = function(variableName) {
+		delete $scope.variables[variableName];
+	}
+	
 	$scope.addTransformVariable = function() {
 		$scope.variables[$scope.variable.name][transformDefinition][transformMethod] = "look in here"
 		
 	}
 	
-	$scope.removeVariable = function(variableName) {
-		delete $scope.variables[variableName];
+	$scope.addSummarySection = function() {
+		$scope.summarySections[$scope.newSummarySectionName] = {name : $scope.newSummarySectionName, summaryVariables : []};
+		$scope.newSummarySectionName = null;
+	}
+	
+	$scope.addSummaryVariables = function() {
+	
 	}
 	
 	$scope.save = function() {

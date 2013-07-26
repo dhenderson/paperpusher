@@ -12,7 +12,12 @@
 				<h1>Navigation</h1>
 				<h2><a href="#variables">Variables</a></h2>
 				<ul ng-repeat="variable in variables">
-					<li><a href="#{{variable.name}}">{{variable.name}}</a></li>
+					<li><a href="#variable-{{variable.name}}">{{variable.name}}</a></li>
+				</ul>
+				<h2><a href="#conditions">Conditions</a></h2>
+				<h2><a href="#summary-sections">Sections</a></h2>
+				<ul ng-repeat="summarySection in summarySections">
+					<li><a href="#summary-section-{{summarySection.name}}">{{summarySection.name}}</a></li>
 				</ul>
 			</div>
 			<div class="right-pane">
@@ -30,7 +35,7 @@
 					<h1 id="variables">Variables</h1>
 					<div ng-repeat="variable in variables" class="variable transform-{{variable.isTransform}}">
 						
-						<h2 id="{{variable.name}}">
+						<h2 id="variable-{{variable.name}}">
 							{{variable.name}} 
 							<span ng-show="variable.isTransform">
 								(Transformation)
@@ -55,7 +60,20 @@
 						<input type="text" ng-model="newVariableName" ng-model-instant></input>
 						<button class="btn" ng-click="addVariable()">Add variable</button>
 					</div>
-				
+					<h1 id="conditions">Conditions</h1>
+					<div ng-repeat="condition in conditions" class="condition">
+						<h2 id="condition-{{condition.name}}
+					</div>
+					<h1 id="summary-sections">Sections</h1>
+					<div ng-repeat="summarySection in summarySections" class="summary-section">
+						<h2 id="summary-section-{{summarySection.name}}">{{summarySection.name}}</h2>
+						<h3 id="summary-variables">Summary Variables</h3>
+						<h3 id="charts">Charts</h3>
+					</div>
+					<div>
+						<input type="text" ng-model="newSummarySectionName" ng-model-instant></input>
+						<button class="btn" ng-click="addSummarySection()">Add summary section</button>
+					</div>
 				</form>
 			</div>
 		</div>

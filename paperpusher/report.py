@@ -12,6 +12,7 @@ class Report():
 		self.additional_header_names = [] # additional header names not defined in the report.json file, such as an ID or a constant
 		self.summary_sections = []
 		self.path_to_master_csv_file = "." # the master CSV to build this report from
+		self.conditions = {} # map in the form {condition_name : condition_object} of conditions that can be applied to summary variables
 		
 	def __string__(self):
 		return name
@@ -49,6 +50,8 @@ class Report():
 				variable_header_format.set_border(style=1)
 				variable_header_format.set_align('center')
 				variable_header_format.set_align('vcenter')
+				# save the row and column number this header was inputted into in the report spreadsheet
+				summary_variable.name_spreadsheet_position = [row_num, col_num]
 				
 				# header names
 				worksheet.merge_range(row_num, col_num + 1, row_num, 3, summary_variable.name, variable_header_format)
@@ -73,6 +76,8 @@ class Report():
 						method_name = method['method']
 						method_display_name = summary_variable.get_method_display_name(method_name)
 						worksheet.write(row_num, col_num, method_display_name, method_header_format)
+						# save the row and column number in the outputed report spreadsheet for the method
+						summary_variable.method_spreadsheet_position['method_name'] = [row_num, col_num]
 						row_num = row_num + 1
 						
 					col_num = 1

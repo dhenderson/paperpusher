@@ -1,8 +1,5 @@
 body {padding: 10px; font-size: 8pt; font-family: verdana, arial;}
 
-h1{font-size: 1.4em;}
-h2{font-size: 1.2em;}
-
 label {display: inline;}
 
 .navigation-panel {width: 270px; border: 1px solid #AAA; background-color: #EEEEFF; padding: 10px; float: left; overflow-y: scroll; position: fixed;}
@@ -13,5 +10,7 @@ label {display: inline;}
 
 .variable{padding: 10px; border: 1px solid #CCC; margin-bottom: 10px; background-color: #EEE;}
 .variable h2 {margin-top: 0px}
+
+.summary-section {padding: 10px 0 px 10px 0px;  border-top: 1px solid #777; margin-bottom: 10px;}
 
 .transform-true{background-color: #FFFFAA}

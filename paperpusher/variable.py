@@ -7,32 +7,46 @@ class SummaryVariable():
 	"""Directions for how to summarize a given varaible
 		
 		Attributes:
-			name = The summary variable's name
-			variables = a list of variables
-			methods = A list of dictionaries, with each dictionary
+			name: The summary variable's name
+			variables: a list of variables
+			methods: A list of dictionaries, with each dictionary
 				defining a method in the form
 				
-				TODO: this is in flux
 				{
 					method : method_name,
 					objective_values: [objective_value],
 					objective_must_be : must_be_string
 				}
-			where = a list of dictionaries with ANDed together WHERE clauses conditions
-				in the following form
+			conditions : [list] a list of lists of conditions in the form:
+			
+				[ [condition_1, condition_2], [condition_3] ]
 				
-				{
-					variable : variable_name
-					variable_must_be : must_be_string
-					variable_values : [variable_value]
-				}
+				where all conditions in one set of conditions must be met. Using the above example we would interpret:
+				
+					Condition one and two must be met, or condition three must be met
+			
+			method_spreadsheet_position: [dictionary] dictionary in the form 
+				
+				{"Method print friendly name" : [row number, column number]}
+
+				where the row and column number correspond to the position of the method display name in the spreadsheet
+			name_spreadsheet_position: [list] list in the form
+			
+				[row_number, column number]
+				
+				for the position of the summary variable name in the spreadsheet
 	"""
 	
-	def __init__(self, name, variables = [], methods = [], where = []):
+	def __init__(self, name, variables = [], methods = []):
 		self.name = name
 		self.variables = variables # a list of variables
 		self.methods = methods
-		self.where = {}
+		
+		# location of above attributes in the spreadsheet
+		self.method_spreadsheet_position = {} # {method_name : [row_number, column_number]}
+		self.name_spreadsheet_position = None # integer row number
+		
+		self.conditions = []
 		
 	def apply_method(self, data_frame, method_name):
 		"""Applied the method specified by string to this variable
@@ -46,8 +60,8 @@ class SummaryVariable():
 				the string, returns null.
 		"""
 		
-		# apply the where clause
-		data_frame = self.apply_where_clause(data_frame)
+		# apply conditions
+		data_frame = self.apply_conditions(data_frame)
 		
 		if method_name == "min":
 			return self.min(data_frame)
@@ -68,26 +82,23 @@ class SummaryVariable():
 			
 		return None
 		
-	def apply_where_clause(self, data_frame):
-		"""Returns a subset of the data frame based on a where clause specification
+	def apply_conditions(self, data_frame):
+		"""Returns a subset of the data frame based on the conditions specified
 			Args:
 				data_frame: Pandas data frame
 			Returns:
 				Subset of pandas data frame. If no where clause, the original data_frame is returned
 		"""
 		
-		if len(self.where) > 0:
-			for where in self.where:
-				where_variable = where['variable']
-				where_variable_must_be = where['variable_must_be']
-				where_values = where['variable_values']
-				
-				if where_variable_must_be == "equal":
-					data_frame = data_frame[data_frame[where_variable] ==  where_values[0]]
-				elif where_variable_must_be == "less_than":
-					data_frame = data_frame[data_frame[where_variable] <  where_values[0]]
-				elif where_variable_must_be == "greater_than_equal_to":
-					data_frame = data_frame[data_frame[where_variable] >=  where_values[0]]
+		if len(self.conditions) > 0:
+			for condition_group in self.conditions:
+				for condition in condition_group:	
+					if condition.variable_must_be == "equal":
+						data_frame = data_frame[data_frame[condition.variable_name] ==  condition.variable_values[0]]
+					elif condition.variable_must_be == "less_than":
+						data_frame = data_frame[data_frame[condition.variable_name] <  condition.variable_values[0]]
+					elif condition.variable_must_be == "greater_than_equal_to":
+						data_frame = data_frame[data_frame[condition.variable_name] >=  condition.variable_values[0]]
 		
 		return data_frame
 		
@@ -206,6 +217,21 @@ class SummaryVariable():
 		observations = len(data_frame.index)
 		
 		return (sum_variable_one/observations)*100
+		
+class Condition():
+	""" Directives to restrict a data frame based on condition
+	
+		Attributes:
+			name : [string] the name of the condition
+			variable_must_be : [string] one of the must_be values
+			variable_values : [list] a list of values to be evalutaed using the "variable_must_be" operator
+	"""
+	
+	def __init__(self, name, variable_name, variable_must_be, variable_values = []):
+		self.name = name
+		self.variable_name = variable_name
+		self.variable_must_be = variable_must_be
+		self.variable_values = variable_values
 
 class BasicVariable():
 	"""Model for a basic, non-transformed, variable

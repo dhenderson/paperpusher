@@ -1,6 +1,6 @@
 import json
 from paperpusher.report import Report, SummarySection
-from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable
+from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable, Condition
 
 # Loads the json file at the specified path and returns 
 # the json data model as python lists and dictionaries
@@ -59,6 +59,14 @@ def load_report_from_json(path_to_json_file):
 		
 		report.variables.append(variable)
 		
+	# conditions
+	for condition_name in json_data['conditions']:
+		variable_name = json_data['conditions'][condition_name]['variable']
+		variable_must_be = json_data['conditions'][condition_name]['variable_must_be']
+		variable_values = json_data['conditions'][condition_name]['variable_values']
+		condition = Condition(condition_name, variable_name, variable_must_be, variable_values)
+		report.conditions[condition_name] = condition
+		
 	for summary_section_name in json_data['summary_sections']:
 		summary_section = SummarySection(summary_section_name)
 		
@@ -68,8 +76,14 @@ def load_report_from_json(path_to_json_file):
 					json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['variables'], 
 					json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['methods'])
 										
-			if 'where' in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]:
-				summary_variable.where = json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['where']
+			# attach conditions to summary variables
+			if 'conditions' in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]:
+				for json_condition_group in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['conditions']:
+					condition_group = []
+					for condition_name in json_condition_group:
+						condition = report.conditions[condition_name]
+						condition_group.append(condition)
+					summary_variable.conditions.append(condition_group)
 					
 			summary_section.summary_variables.append(summary_variable)
 			
