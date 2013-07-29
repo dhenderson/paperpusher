@@ -1,6 +1,6 @@
 import json
-from paperpusher.report import Report, SummarySection
-from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable, Condition
+from paperpusher.report import Report, SummarySection, Objective
+from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable, Group
 
 # Loads the json file at the specified path and returns 
 # the json data model as python lists and dictionaries
@@ -59,37 +59,80 @@ def load_report_from_json(path_to_json_file):
 		
 		report.variables.append(variable)
 		
-	# conditions
-	for condition_name in json_data['conditions']:
-		variable_name = json_data['conditions'][condition_name]['variable']
-		variable_must_be = json_data['conditions'][condition_name]['variable_must_be']
-		variable_values = json_data['conditions'][condition_name]['variable_values']
-		condition = Condition(condition_name, variable_name, variable_must_be, variable_values)
-		report.conditions[condition_name] = condition
+	# groups
+	if 'groups' in json_data:
+		for group_name in json_data['groups']:
+			variable_name = json_data['groups'][group_name]['variable']
+			variable_must_be = json_data['groups'][group_name]['variable_must_be']
+			variable_values = json_data['groups'][group_name]['variable_values']
+			group = Group(group_name, variable_name, variable_must_be, variable_values)
+			report.groups[group_name] = group
 		
+	# summary sections
 	for summary_section_name in json_data['summary_sections']:
 		summary_section = SummarySection(summary_section_name)
 		
+		# summary variables
 		for summary_variable_name in json_data['summary_sections'][summary_section_name]['summary_variables']:
 			
 			summary_variable = SummaryVariable(summary_variable_name, 
 					json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['variables'], 
 					json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['methods'])
 										
-			# attach conditions to summary variables
-			if 'conditions' in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]:
-				for json_condition_group in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['conditions']:
-					condition_group = []
-					for condition_name in json_condition_group:
-						condition = report.conditions[condition_name]
-						condition_group.append(condition)
-					summary_variable.conditions.append(condition_group)
+			# attach groups to summary variables
+			if 'groups' in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]:
+				for group_name in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['groups']:
+					if group_name == '_pp_all':
+						group = create_all_group()
+					else:
+						group = report.groups[group_name]
 					
-			summary_section.summary_variables.append(summary_variable)
+					# add to the report and summary variable gropus
+					if group_name not in report.groups:
+						report.groups[group.name] = group					
+					summary_variable.groups.append(group)
+			else:
+				# no group specified, so create an "all" group
+				group = create_all_group()
+				if group.name not in report.groups:
+					report.groups[group.name] = group					
+				summary_variable.groups.append(group)
+					
+			summary_section.summary_variables[summary_variable_name] = summary_variable
 			
 		report.summary_sections.append(summary_section)
+		
+		if 'objectives' in json_data['summary_sections'][summary_section_name]:
+			for objective_name in json_data['summary_sections'][summary_section_name]['objectives']:
+				
+				if 'group' not in json_data['summary_sections'][summary_section_name]['objectives'][objective_name]:
+					group_name = '_pp_all'
+					
+				if group_name == '_pp_all':
+					group = create_all_group()
+				else:
+					group = report.groups[group_name]
+				
+				summary_variable_name = json_data['summary_sections'][summary_section_name]['objectives'][objective_name]['summary_variable']
+				summary_variable = summary_section.summary_variables[summary_variable_name]
+				method = json_data['summary_sections'][summary_section_name]['objectives'][objective_name]['method']
+				objective_values = json_data['summary_sections'][summary_section_name]['objectives'][objective_name]['objective_values']
+				objective_must_be = json_data['summary_sections'][summary_section_name]['objectives'][objective_name]['objective_must_be']
+				
+				objective = Objective(objective_name, method, summary_variable, objective_must_be, objective_values, group)
+				
+				summary_section.objectives.append(objective)
 
 	return report
+	
+def create_all_group():
+	name = "All observations"
+	variable_name = None
+	variable_must_be = None
+	variable_values = None
+	group = Group(name, variable_name, variable_must_be, variable_values, False)
+			
+	return group
 	
 def save_report_as_json(path_to_json_file, report):
 	# setup the basic json data structure
@@ -109,10 +152,15 @@ def save_report_as_json(path_to_json_file, report):
 		json_data['summary_sections'][summary_section.name] =  {}
 		json_data['summary_sections'][summary_section.name]['summary_variables'] =  {}
 		
-		for summary_variable in summary_section.summary_variables:
+		for summary_variable_name in summary_section.summary_variables:
+			summary_variable = summary_section.summary_variables[summary_variable_name]
 			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name] = {}
 			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['variables'] = summary_variable.variables
 			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['methods'] = summary_variable.methods
-			json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['where'] = summary_variable.where
+			# TODO: save groups
+			# TODO: save objectives
+			#json_data['summary_sections'][summary_section.name]['summary_variables'][summary_variable.name]['groups'] = summary_variable.groups
+			
+	
 			
 	save_json(path_to_json_file, json_data)

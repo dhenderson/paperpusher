@@ -9,21 +9,8 @@ class SummaryVariable():
 		Attributes:
 			name: The summary variable's name
 			variables: a list of variables
-			methods: A list of dictionaries, with each dictionary
-				defining a method in the form
-				
-				{
-					method : method_name,
-					objective_values: [objective_value],
-					objective_must_be : must_be_string
-				}
-			conditions : [list] a list of lists of conditions in the form:
-			
-				[ [condition_1, condition_2], [condition_3] ]
-				
-				where all conditions in one set of conditions must be met. Using the above example we would interpret:
-				
-					Condition one and two must be met, or condition three must be met
+			methods: [list] A list of string method names
+			groups : [list] a of Group objects applied to this summary variable
 			
 			method_spreadsheet_position: [dictionary] dictionary in the form 
 				
@@ -46,22 +33,23 @@ class SummaryVariable():
 		self.method_spreadsheet_position = {} # {method_name : [row_number, column_number]}
 		self.name_spreadsheet_position = None # integer row number
 		
-		self.conditions = []
+		self.groups = []
 		
-	def apply_method(self, data_frame, method_name):
+	def apply_method(self, data_frame, method_name, group):
 		"""Applied the method specified by string to this variable
 			
 			Args:
 				data_frame: A pandas dataframe object
 				method_name: string representing one of the SummaryVariable analytic methods
+				group : [Group] a group to subset the data frame by
 				
 			Returns:
 				Returns the return value of a specified method. If no method matches
 				the string, returns null.
 		"""
 		
-		# apply conditions
-		data_frame = self.apply_conditions(data_frame)
+		# apply groups
+		data_frame = self.apply_group(data_frame, group)
 		
 		if method_name == "min":
 			return self.min(data_frame)
@@ -82,23 +70,22 @@ class SummaryVariable():
 			
 		return None
 		
-	def apply_conditions(self, data_frame):
-		"""Returns a subset of the data frame based on the conditions specified
+	def apply_group(self, data_frame, group):
+		"""Returns a subset of the data frame based on the groups specified
 			Args:
 				data_frame: Pandas data frame
+				group : [Group] a group object
 			Returns:
 				Subset of pandas data frame. If no where clause, the original data_frame is returned
 		"""
-		
-		if len(self.conditions) > 0:
-			for condition_group in self.conditions:
-				for condition in condition_group:	
-					if condition.variable_must_be == "equal":
-						data_frame = data_frame[data_frame[condition.variable_name] ==  condition.variable_values[0]]
-					elif condition.variable_must_be == "less_than":
-						data_frame = data_frame[data_frame[condition.variable_name] <  condition.variable_values[0]]
-					elif condition.variable_must_be == "greater_than_equal_to":
-						data_frame = data_frame[data_frame[condition.variable_name] >=  condition.variable_values[0]]
+
+		if group.is_subset:
+			if group.variable_must_be == "equal":
+				data_frame = data_frame[data_frame[group.variable_name] ==  group.variable_values[0]]
+			elif group.variable_must_be == "less_than":
+				data_frame = data_frame[data_frame[group.variable_name] <  group.variable_values[0]]
+			elif group.variable_must_be == "greater_than_equal_to":
+				data_frame = data_frame[data_frame[group.variable_name] >=  group.variable_values[0]]
 		
 		return data_frame
 		
@@ -126,60 +113,6 @@ class SummaryVariable():
 			return "Percent of observations"
 		
 		return method_name
-		
-	def get_objective_display_text(self, objective_must_be, objective_values):
-		"""Returns a display string for the objective requirement
-			Args:
-				objective_must_be: String must_be value
-				objective_values: list of values for the objective
-			Returns:
-				Returns a string description of the objective requirement
-		"""
-		
-		if objective_must_be == "equal":
-			return "Equals " + str(objective_values[0])
-		elif objective_must_be == "greater_than_equal_to":
-			return "At least " + str(objective_values[0])
-		elif objective_must_be == "less_than":
-			return "Less than " + str(objective_values[0])
-		elif objective_must_be == "between":
-			return "Betweeen " + str(objective_values[0]) + " and " +  str(objective_values[1])
-		elif objective_must_be == "in":
-			return "In " + str(objective_values)
-		elif objective_must_be == "not_in":
-			return "Not in " + str(objective_values)
-		return False
-		
-	def objective_met(self, variable_value, objective_values, objective_must_be):
-		"""Determines if an objective was met
-			Args:
-				variable_value: The variable value
-				objective_values: list of values for the objective
-				objective_must_be: String must_be value
-			Returns:
-				True if the objective is met, false otherwise.
-		"""
-	
-		if objective_must_be == "equal":
-			if variable_value == objective_values[0]:
-				return True
-		elif objective_must_be == "greater_than_equal_to":
-			if variable_value >= objective_values[0]:
-				return True
-		elif objective_must_be == "less_than":
-			if variable_value < objective_values[0]:
-				return True
-		elif objective_must_be == "between":
-			if variable_value > objective_values[0] and variable_value > objective_values[1]:
-				return True
-		elif objective_must_be == "in":
-			if variable_value in objective_values:
-				return True
-		elif objective_must_be == "not_in":
-			if variable_value not in objective_values:
-				return True
-		return False
-		
 	
 	# evaluative methods	
 	def min(self, data_frame):
@@ -218,20 +151,22 @@ class SummaryVariable():
 		
 		return (sum_variable_one/observations)*100
 		
-class Condition():
-	""" Directives to restrict a data frame based on condition
+class Group():
+	""" Directives to restrict a data frame based on group
 	
 		Attributes:
-			name : [string] the name of the condition
+			name : [string] the name of the group
 			variable_must_be : [string] one of the must_be values
 			variable_values : [list] a list of values to be evalutaed using the "variable_must_be" operator
+			is_subset : [boolean] indicates if the group is a subset of the data frame
 	"""
 	
-	def __init__(self, name, variable_name, variable_must_be, variable_values = []):
+	def __init__(self, name, variable_name, variable_must_be, variable_values = [], is_subset = True):
 		self.name = name
 		self.variable_name = variable_name
 		self.variable_must_be = variable_must_be
 		self.variable_values = variable_values
+		self.is_subset = is_subset
 
 class BasicVariable():
 	"""Model for a basic, non-transformed, variable

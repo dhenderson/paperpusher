@@ -6,46 +6,28 @@
             "summary_variables": {
                 "Birth to last vote": {
                     "methods": [
-                        {
-                            "method": "mean", 
-                            "objective_must_be": "less_than", 
-                            "objective_values": [
-                                100
-                            ]
-                        }, 
-                        {
-                            "method": "min"
-                        }, 
-                        {
-                            "method": "max"
-                        }
+                        "mean", 
+                        "min", 
+                        "max"
                     ], 
                     "variables": [
                         "Birth to last vote"
-                    ], 
-                    "where": {}
+                    ]
                 }, 
                 "Birth to last vote for David": {
                     "methods": [
-                        {
-                            "method": "mean", 
-                            "objective_must_be": "greater_than_equal_to", 
-                            "objective_values": [
-                                150
-                            ]
-                        }
+                        "mean"
                     ], 
                     "variables": [
                         "Birth to last vote"
+                    ]
+                }, 
+                "Last name begins with C": {
+                    "methods": [
+                        "sum"
                     ], 
-                    "where": [
-                        {
-                            "variable": "First name", 
-                            "variable_must_be": "equal", 
-                            "variable_values": [
-                                "David"
-                            ]
-                        }
+                    "variables": [
+                        "Last name begins with C"
                     ]
                 }
             }
