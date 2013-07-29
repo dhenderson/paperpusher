@@ -62,6 +62,12 @@ function ReportController($scope) {
 		
 		jsonData = {"name" : $scope.reportName, "description" : $scope.description}
 		
+		// download the json file
+		jsonDownload = angular.toJson(jsonData, pretty=true);
+		
+		window.location.href = "data:text;base64," + jsonDownload;
+		document.location = 'data:Application/octet-stream,' + encodeURIComponent(jsonDownload);
+		
 		$scope.formReportName = null;
 	};
 	
