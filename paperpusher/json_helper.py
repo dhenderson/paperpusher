@@ -1,6 +1,10 @@
 import json
-from paperpusher.report import Report, SummarySection, Objective
+from paperpusher.report import Report, SummarySection, Objective, Chart
 from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable, Group
+
+
+# display value for the all observations group
+group_all_observations_display_name = "All observations"
 
 # Loads the json file at the specified path and returns 
 # the json data model as python lists and dictionaries
@@ -102,6 +106,7 @@ def load_report_from_json(path_to_json_file):
 			
 		report.summary_sections.append(summary_section)
 		
+		# objectives
 		if 'objectives' in json_data['summary_sections'][summary_section_name]:
 			for objective_name in json_data['summary_sections'][summary_section_name]['objectives']:
 				
@@ -122,11 +127,36 @@ def load_report_from_json(path_to_json_file):
 				objective = Objective(objective_name, method, summary_variable, objective_must_be, objective_values, group)
 				
 				summary_section.objectives.append(objective)
+			
+		# charts
+		if 'charts' in json_data['summary_sections'][summary_section_name]:
+			for chart_name in json_data['summary_sections'][summary_section_name]['charts']:
+			
+				# get the summary variable for this chart
+				for summary_variable_name in summary_section.summary_variables:
+					if summary_variable_name == json_data['summary_sections'][summary_section_name]['charts'][chart_name]['summary_variable']:
+						summary_variable = summary_section.summary_variables[summary_variable_name]
+						break
+						
+				method = json_data['summary_sections'][summary_section_name]['charts'][chart_name]['method']
+				type = json_data['summary_sections'][summary_section_name]['charts'][chart_name]['type']
+				group_names = []
+				
+				for group_name in json_data['summary_sections'][summary_section_name]['charts'][chart_name]['groups']:
+					if group_name == '_pp_all':
+						group_name = group_all_observations_display_name
+
+					group_names.append(group_name)
+					
+				chart = Chart(chart_name, summary_variable, method, type, group_names)
+				
+				summary_section.charts.append(chart)
+				
 
 	return report
 	
 def create_all_group():
-	name = "All observations"
+	name = group_all_observations_display_name
 	variable_name = None
 	variable_must_be = None
 	variable_values = None

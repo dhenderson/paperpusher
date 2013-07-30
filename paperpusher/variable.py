@@ -12,27 +12,22 @@ class SummaryVariable():
 			methods: [list] A list of string method names
 			groups : [list] a of Group objects applied to this summary variable
 			
-			method_spreadsheet_position: [dictionary] dictionary in the form 
+			method_spreadsheet_columns: [dictionary] dictionary in the form 
 				
-				{"Method print friendly name" : [row number, column number]}
+				{"method_name" : column number}
 
-				where the row and column number correspond to the position of the method display name in the spreadsheet
-			name_spreadsheet_position: [list] list in the form
-			
-				[row_number, column number]
+				where the column number correspond to the column of the method name in the spreadsheet
 				
-				for the position of the summary variable name in the spreadsheet
+			subheader_row_num : [int] subheader row number in the worksheet
+			last_group_row_num : [int] row number of the last group in the worksheet
+
 	"""
 	
 	def __init__(self, name, variables = [], methods = []):
 		self.name = name
 		self.variables = variables # a list of variables
 		self.methods = methods
-		
-		# location of above attributes in the spreadsheet
-		self.method_spreadsheet_position = {} # {method_name : [row_number, column_number]}
-		self.name_spreadsheet_position = None # integer row number
-		
+		self.method_spreadsheet_columns = {}
 		self.groups = []
 		
 	def apply_method(self, data_frame, method_name, group):

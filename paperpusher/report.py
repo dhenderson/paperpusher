@@ -53,6 +53,7 @@ class Report():
 					objectives_header_format.set_border(style=1)
 					objectives_header_format.set_align('center')
 					objectives_header_format.set_align('vcenter')
+					objectives_header_format.set_text_wrap()
 					worksheet.merge_range(row_num, col_num, row_num, 1, "Objectives", objectives_header_format)
 					
 					row_num = row_num + 1
@@ -62,6 +63,7 @@ class Report():
 					objectives_subheader_format.set_border(style=1)
 					objectives_subheader_format.set_align('center')
 					objectives_subheader_format.set_align('vcenter')
+					objectives_subheader_format.set_text_wrap()
 					
 					worksheet.write(row_num, col_num, "Objective", objectives_subheader_format)
 					worksheet.write(row_num, col_num + 1, "Met", objectives_subheader_format)
@@ -75,6 +77,7 @@ class Report():
 				summary_variable_value_format.set_border(style=1)
 				summary_variable_value_format.set_align('center')
 				summary_variable_value_format.set_align('vcenter')
+				summary_variable_value_format.set_text_wrap()
 					
 				# objective name
 				objective_name = objective.name
@@ -90,12 +93,14 @@ class Report():
 					summary_variable_value_format.set_border(style=1)
 					summary_variable_value_format.set_align('center')
 					summary_variable_value_format.set_align('vcenter')
+					summary_variable_value_format.set_text_wrap()
 					worksheet.write(row_num, col_num, "Yes", summary_variable_value_format)
 				else:
 					summary_variable_value_format = workbook.add_format({'bold': True, 'color': '#FF0000', 'bg_color' : "#FFDDDD"})
 					summary_variable_value_format.set_border(style=1)
 					summary_variable_value_format.set_align('center')
 					summary_variable_value_format.set_align('vcenter')
+					summary_variable_value_format.set_text_wrap()
 					worksheet.write(row_num, col_num, "No", summary_variable_value_format)
 					
 				row_num = row_num + 1
@@ -109,13 +114,15 @@ class Report():
 				summary_variable = summary_section.summary_variables[summary_variable_name]
 				col_num = 0
 				
+				# widen the column
+				worksheet.set_column(row_num, col_num, 20)
+				
 				# write the summary variable name
 				variable_header_format = workbook.add_format({'bold': True, 'bg_color': '#DDDDDD'})
 				variable_header_format.set_border(style=1)
 				variable_header_format.set_align('center')
 				variable_header_format.set_align('vcenter')
-				# save the row and column number this header was inputted into in the report spreadsheet
-				summary_variable.name_spreadsheet_position = [row_num, col_num]
+				variable_header_format.set_text_wrap()
 				
 				# header names
 				num_cells_to_merge = len(summary_variable.methods)
@@ -127,6 +134,10 @@ class Report():
 				subheader_format.set_border(style=1)
 				subheader_format.set_align('center')
 				subheader_format.set_align('vcenter')
+				subheader_format.set_text_wrap()
+				
+				# set the subheader row number
+				summary_variable.subheader_row_num = row_num
 				
 				worksheet.write(row_num, col_num, "Group", subheader_format)
 				
@@ -136,8 +147,8 @@ class Report():
 				for method_name in summary_variable.methods:
 					method_display_name = summary_variable.get_method_display_name(method_name)
 					worksheet.write(row_num, col_num, method_display_name, subheader_format)
-					# save the row and column number in the outputed report spreadsheet for the method
-					summary_variable.method_spreadsheet_position['method_name'] = [row_num, col_num]
+					# save the method row number for charting purposes
+					summary_variable.method_spreadsheet_columns[method_name] = col_num
 					
 					col_num = col_num + 1
 					
@@ -148,6 +159,7 @@ class Report():
 				summary_variable_value_format.set_border(style=1)
 				summary_variable_value_format.set_align('center')
 				summary_variable_value_format.set_align('vcenter')
+				summary_variable_value_format.set_text_wrap()
 					
 				# now write the method values
 				for group in summary_variable.groups:
@@ -163,9 +175,42 @@ class Report():
 						worksheet.write(row_num, col_num, summary_variable_value, summary_variable_value_format)
 						col_num = col_num + 1
 						
+					# set the last group row number
+					summary_variable.last_group_row_num = row_num
+						
 					row_num = row_num + 1
 				
 				row_num = row_num + 2
+				
+			# charts
+			for chart in summary_section.charts:
+				chart_data_col_num = chart.summary_variable.method_spreadsheet_columns[chart.method]
+				
+				# create the xlsxwriter chart object
+				excel_chart = workbook.add_chart({'type': chart.type})
+				# each group name represents a data series				
+				start_row_num = chart.summary_variable.subheader_row_num + 1
+				stop_row_num = chart.summary_variable.last_group_row_num
+				
+				worksheet_name = worksheet.name
+				# if the worksheet name has spaces, encapsulate in single quotes
+				if ' ' in worksheet_name:
+					worksheet_name = "'" + worksheet_name + "'"
+				
+				
+				excel_chart.add_series({
+					'name':       chart.summary_variable.get_method_display_name(chart.method),
+					'categories': [worksheet_name, start_row_num, 0,  stop_row_num , 0],
+					'values':     [worksheet_name, start_row_num, chart_data_col_num, stop_row_num, chart_data_col_num]
+				})
+				
+				excel_chart.set_title ({'name': chart.name})
+				excel_chart.set_x_axis({'name': chart.summary_variable.get_method_display_name(chart.method)})
+				excel_chart.set_y_axis({'name': 'Groups'})
+					
+				# insert the chart into the worksheet
+				chart_start_row_num = chart.summary_variable.subheader_row_num - 1
+				worksheet.insert_chart('D' + str(chart_start_row_num), excel_chart, {'x_offset': 25, 'y_offset': 10})
 				
 		# insert the raw data worksheet as the last worksheet in the workbook
 		self.insert_raw_data_worksheet("Raw data", workbook)
@@ -192,18 +237,22 @@ class SummarySection():
 			name : [string] Name of the summary section
 			summary_variables : [dictionary] A map of SummaryVariable objects where the key is the name of the summary variable
 			objectives: [list] A list of Objective objects
+			charts : [list] a list of Chart objects
 	"""
 	
-	def __init__(self, name, summary_variables = None, objectives = None):
+	def __init__(self, name, summary_variables = None, objectives = None, charts = None):
 		self.name = name
 		
 		if summary_variables == None:
 			summary_variables = {}
 		if objectives == None:
 			objectives = []
+		if charts == None:
+			charts = []
 		
 		self.summary_variables = summary_variables
 		self.objectives = objectives
+		self.charts = charts
 		
 class Objective():
 	""" An objective to be met for a summary goal method value
@@ -278,10 +327,12 @@ class Objective():
 		return False
 		
 class Chart():
-	def __init__(self, name, summary_variable, method, groups = None):
+	def __init__(self, name, summary_variable, method, type, group_names = None):
 		self.name = name
 		self.summary_variable = summary_variable
 		self.method = method
-		if groups == None:
-			groups = []
-		self.groups = groups
+		if group_names == None:
+			group_names = []
+		self.group_names = group_names # list of group names
+		self.type = type
+		
