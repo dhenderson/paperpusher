@@ -136,7 +136,9 @@ class SummaryVariable():
 		average_variable_one = data_frame[self.variables[0]].mean()
 		average_variable_two = data_frame[self.variables[1]].mean()
 		
-		return (average_variable_one/average_variable_two)*100
+		if (average_variable_two)*-1 > 0:
+			return (average_variable_one/average_variable_two)*100
+		return "---"
 		
 	def percent_of_obs(self, data_frame):
 		"""Returns the sum of variable[0] divided by the number of observations
@@ -144,7 +146,9 @@ class SummaryVariable():
 		sum_variable_one = data_frame[self.variables[0]].sum()
 		observations = len(data_frame.index)
 		
-		return (sum_variable_one/observations)*100
+		if observations > 0:
+			return (sum_variable_one/observations)*100
+		return "---"
 		
 class Group():
 	""" Directives to restrict a data frame based on group
