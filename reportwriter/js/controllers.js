@@ -1,8 +1,10 @@
 function ReportController($scope) {
 	
+	// report properties
 	$scope.report_name = null;
 	$scope.description = null;
 	$scope.variables = {};
+	$scope.groups = {};
 	$scope.summarySections = {}
 	
 	$scope.isTransformOptions = [
@@ -23,6 +25,9 @@ function ReportController($scope) {
 			{transformMethod : 'not_empty', displayValue : 'Not empty'}
 		];
 	
+	/**
+	* Creates a new variable
+	**/
 	$scope.addVariable = function() {
 		$scope.variables[$scope.newVariableName] = { 
 			name: $scope.newVariableName, 
@@ -37,22 +42,27 @@ function ReportController($scope) {
 		variableName:$scope.newVariableName = null;
 	}
 	
+	/**
+	* Removes a variable by name, where each variable name is assumed unique
+	**/
 	$scope.removeVariable = function(variableName) {
 		delete $scope.variables[variableName];
 	}
 	
+	/**
+	* Adds a TransformVariable
+	**/
 	$scope.addTransformVariable = function() {
-		$scope.variables[$scope.variable.name][transformDefinition][transformMethod] = "look in here"
-		
+		$scope.variables[$scope.variable.name][transformDefinition][transformMethod] = null;
 	}
 	
 	$scope.addSummarySection = function() {
-		$scope.summarySections[$scope.newSummarySectionName] = {name : $scope.newSummarySectionName, summaryVariables : []};
+		$scope.summarySections[$scope.newSummarySectionName] = {}
 		$scope.newSummarySectionName = null;
 	}
 	
-	$scope.addSummaryVariables = function() {
-	
+	$scope.addSummaryVariable = function() {
+		var summarySectionName = $scope.summarySectionName;
 	}
 	
 	$scope.save = function() {

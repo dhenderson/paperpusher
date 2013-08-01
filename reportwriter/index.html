@@ -14,7 +14,7 @@
 				<ul ng-repeat="variable in variables">
 					<li><a href="#variable-{{variable.name}}">{{variable.name}}</a></li>
 				</ul>
-				<h2><a href="#conditions">Conditions</a></h2>
+				<h2><a href="#groups">groups</a></h2>
 				<h2><a href="#summary-sections">Sections</a></h2>
 				<ul ng-repeat="summarySection in summarySections">
 					<li><a href="#summary-section-{{summarySection.name}}">{{summarySection.name}}</a></li>
@@ -60,9 +60,9 @@
 						<input type="text" ng-model="newVariableName" ng-model-instant></input>
 						<button class="btn" ng-click="addVariable()">Add variable</button>
 					</div>
-					<h1 id="conditions">Conditions</h1>
-					<div ng-repeat="condition in conditions" class="condition">
-						<h2 id="condition-{{condition.name}}
+					<h1 id="groups">groups</h1>
+					<div ng-repeat="group in groups" class="group">
+						<h2 id="group-{{group.name}}
 					</div>
 					<h1 id="summary-sections">Sections</h1>
 					<div ng-repeat="summarySection in summarySections" class="summary-section">
