@@ -1,16 +1,17 @@
-body {padding: 10px; font-size: 8pt; font-family: verdana, arial;}
+body {font-size: 8pt; font-family: verdana, arial;}
 
-label {display: inline;}
+label {display: block;}
 
-.navigation-panel {width: 270px; border: 1px solid #AAA; background-color: #EEEEFF; padding: 10px; float: left; overflow-y: scroll; position: fixed;}
-.navigation-panel a{text-decoration: none; padding: 5px;}
-.navigation-panel a:hover{background-color: #FFAAAA;}
-
-.right-pane {margin-left: 320px;}
-
-.variable{padding: 10px; border: 1px solid #CCC; margin-bottom: 10px; background-color: #EEE;}
-.variable h2 {margin-top: 0px}
+h1, h2, h3, h4{font-family: verdana, arial}
+h1 {font-size: 2.5em;}
 
 .summary-section {padding: 10px 0 px 10px 0px;  border-top: 1px solid #777; margin-bottom: 10px;}
 
-.transform-true{background-color: #FFFFAA}
+header{padding: 10px; background-color: #DDD; color: #555; font-weight: bold; font-size: 1.8em;}
+
+.pp-container{padding: 10px;}
+.left-nav{float: left; width: 200px; padding: 5px; background-color: #EEE;}
+.left-nav ul li a{color: #555;}
+.right-content{margin-left: 225px; padding: 10px;}
+
+.pp-done{font-weight: bold; color: #00AA00; font-size: 2em;}
