@@ -3,6 +3,7 @@
     "name": "Test report", 
     "variables": {
         "Birth to last vote": {
+			"name": "Birth to last vote",
             "data_type": "date", 
             "is_transform": true, 
             "transform_definition": {
@@ -15,18 +16,22 @@
             }
         }, 
         "Date of birth": {
+			"name": "Date of birth",
             "data_type": "date", 
             "is_transform": false
         }, 
         "Last date voted": {
+			"name": "Last date voted",
             "data_type": "date", 
             "is_transform": false
         }, 
         "First name": {
+			"name": "First name",
             "data_type": "string", 
             "is_transform": false
         }, 
         "Has first name": {
+			"name": "Has first name",
             "data_type": "string", 
             "is_transform": true, 
             "transform_definition": {
@@ -38,10 +43,12 @@
             }
         }, 
         "Last name": {
+			"name": "Last name",
             "data_type": "string", 
             "is_transform": false
         }, 
         "Last name begins with C": {
+			"name": "Last name begins with C",
             "data_type": "string", 
             "is_transform": true, 
             "transform_definition": {
@@ -57,6 +64,7 @@
     },
 	"groups" : {
 		"First name David" : {
+			"name": "First name David",
 			"variable" : "First name",
 			"variable_must_be" : "equal",
 			"variable_values" : ["David"]
@@ -64,23 +72,28 @@
 	},
 	"summary_sections" : {
 		"Page one" : {
+			"name" : "Page one",
 			"summary_variables" : {
 				"Birth to last vote" : {
+					"name": "Birth to last vote",
 					"variables" : ["Birth to last vote"],
 					"methods" : ["mean", "min","max"]
 				},
 				"Birth to last vote for David" : {
+					"name": "Birth to last vote for David",
 					"variables" : ["Birth to last vote"],
 					"methods" : ["mean"],
 					"groups" : ["First name David"]
 				},
 				"Last name begins with C" : {
+					"name": "Last name begins with C",
 					"variables" : ["Last name begins with C"],
 					"methods" : ["sum"]
 				}
 			},
 			"objectives" : {
 				"Birth to last vote average less than 100" : {
+					"name" : "Birth to last vote average less than 100",
 					"summary_variable" : "Birth to last vote for David",
 					"method" : "mean",
 					"objective_values" : [100],
@@ -88,6 +101,7 @@
 					"group" : "_pp_all"
 				},
 				"More 2 or more people with last name beginning with C" : {
+					"name" : "More 2 or more people with last name beginning with C",
 					"summary_variable" : "Last name begins with C",
 					"method" : "sum",
 					"objective_values" : [2],

@@ -13,7 +13,7 @@
 	<body>
 		<header>
 			<img src="img/logo.png" /> 
-			Paper Pusher Report Builder
+			Paper Pusher Report Builder 
 		</header>
 		<div ng-controller="ReportController" class="pp-container">
 			<div class="tabbable">
@@ -21,27 +21,46 @@
 					<ul class="nav nav-pills nav-stacked">
 						<li class="active">
 							<a href="#report-properties" data-toggle="tab">
-								Describe the report 
+								Report properties
 							</a>
 						</li>
 						<li>
 							<a href="#variables" data-toggle="tab">
-								Add variables
+								Existing variables
 							</a>
 						</li>
-						<li><a href="#transform-variables" data-toggle="tab">Create new variables</a></li>
-						<li><a href="#groups" data-toggle="tab">Create groups</a></li>
-						<li><a href="#summary-sections" data-toggle="tab">Create sections</a></li>
-						<li><a href="#summary-variables" data-toggle="tab">Summarize variables</a></li>
-						<li><a href="#objectives" data-toggle="tab">Set objectives</a></li>
-						<li><a href="#graphs" data-toggle="tab">Graph data</a></li>
+						<li><a href="#transform-variables" data-toggle="tab">New variables</a></li>
+						<li><a href="#groups" data-toggle="tab">Groups</a></li>
+						<li><a href="#summary-sections" data-toggle="tab">Summary sections</a></li>
+						<li><a href="#summary-variables" data-toggle="tab">Summary variables</a></li>
+						<li><a href="#objectives" data-toggle="tab">Objectives</a></li>
+						<li><a href="#graphs" data-toggle="tab">Graphs</a></li>
 						<li><a href="#finish" data-toggle="tab">Done!</a></li>
 					</ul>
 				</div>
 				<div class="tab-content right-content">					
 					<div id="report-properties" class="tab-pane active">
+					<script>
+						function handle_files(files) {
+							for (i = 0; i < files.length; i++) {
+								file = files[i]
+								//console.log(file)
+								var reader = new FileReader()
+								ret = []
+								reader.onload = function(e) {
+									set_uploaded_json_file_contents(e.target.result);
+								}
+								reader.onerror = function(stuff) {
+									console.log("error", stuff);
+									console.log (stuff.getMessage());
+								}
+								reader.readAsText(file) //readAsdataURL
+							}
+						}
+					</script>
+					<input type="file" onchange="handle_files(this.files)">
+					<div id="uploaded-json" style="display:none;"></div>
 						<h1>Report properties</h1>
-						
 						<label>Report name</label> 
 						<input type="text" ng-model="formReportName" ng-model-instant></input>
 						
@@ -61,7 +80,7 @@
 							<tr ng-repeat="variable in variables" ng-show="!variable.is_transform" class="variable transform-{{variable.is_transform}}">								
 								<td>{{variable.name}}</td>
 								<td>
-									<select ng-model="variable.dataType" ng-options="item.dataType as item.display_value for item in dataTypeOptions"></select>
+									<select ng-model="variable.data_type" ng-options="item.data_type as item.display_value for item in data_typeOptions"></select>
 								</td>
 								<td><button class="btn" ng-click="removeVariable(variable.name)">Remove {{variable.name}}</button></td>
 							</tr>
@@ -86,19 +105,25 @@
 									<select ng-model="variable.transform_definition.transform_method" ng-options="item.transform_method as item.display_value for item in transform_methodOptions"></select>
 								</td>
 								<td>
-									<select ng-model="variable.dataType" ng-options="item.dataType as item.display_value for item in dataTypeOptions"></select>
+									<select ng-model="variable.data_type" ng-options="item.data_type as item.display_value for item in data_typeOptions"></select>
 								</td>
 								<td>
 									<div>
 										<select ng-model="variable.transform_definition.variables[0]" >
-											<option ng-repeat="variable_option in variables" ng-show="!variable_option.is_transform" value="{{variable_option.name}}">
+											<option ng-repeat="variable_option in variables" 
+												ng-show="!variable_option.is_transform" 
+												value="{{variable_option.name}}" 
+												ng-selected="variable_option.name == variable.transform_definition.variables[0]">
 												{{variable_option.name}}
 											</option>
 										</select>
 									</div>
 									<div ng-show="variable.transform_definition.transform_method == 'date_diff_days'">
 										<select ng-model="variable.transform_definition.variables[1]">
-											<option ng-repeat="variable_option in variables" ng-show="!variable_option.is_transform" value="{{variable_option.name}}">
+											<option ng-repeat="variable_option in variables" 
+												ng-show="!variable_option.is_transform" 
+												value="{{variable_option.name}}" 
+												ng-selected="variable_option.name == variable.transform_definition.variables[1]">
 												{{variable_option.name}}
 											</option>
 										</select>
@@ -127,13 +152,15 @@
 								<td>{{group.name}}</td>
 								<td>
 									<select ng-model="group.variable">
-										<option ng-repeat="variable_option in variables" value="{{variable_option.name}}">
+										<option ng-repeat="variable_option in variables" 
+											value="{{variable_option.name}}"
+											ng-selected="variable_option.name == group.variable">
 											{{variable_option.name}}
 										</option>
 									</select>
 								</td>
 								<td>
-									<select ng-model="group.must_be" ng-options="item.must_be as item.display_value for item in must_be_options"></select>
+									<select ng-model="group.variable_must_be" ng-options="item.must_be as item.display_value for item in must_be_options"></select>
 								</td>
 								<td>
 									<input type="text" ng-model="group.variable_values[0]" ng-model-instant></input>
@@ -176,17 +203,17 @@
 									<td>{{summary_variable.name}}</td>
 									<td>
 										<select ng-model="summary_variable.variables[0]">
-											<option ng-repeat="variable_option in variables" value="{{variable_option.name}}">
+											<option ng-repeat="variable_option in variables" value="{{variable_option.name}}" ng-selected="variable_option.name == summary_variable.variables[0]">
 												{{variable_option.name}}
 											</option>
 										</select>
 									</td>
 									<td>
-										<select ng-model="summary_variable.method" ng-options="item.method as item.display_value for item in summaryMethodOptions"></select>
+										<select ng-model="summary_variable.methods[0]" ng-options="item.method as item.display_value for item in summaryMethodOptions"></select>
 									</td>
 									<td>
 										<select ng-model="summary_variable.groups[0]">
-											<option ng-repeat="group_option in groups" value="{{group.name}}">
+											<option ng-repeat="group_option in groups" value="{{group.name}}" ng-selected="group_option.name == summary_variable.groups[0]">
 												{{group_option.name}}
 											</option>
 										</select>

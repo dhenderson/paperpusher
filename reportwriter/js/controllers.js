@@ -5,14 +5,14 @@ function ReportController($scope) {
 	$scope.description = null;
 	$scope.variables = {};
 	$scope.groups = {};
-	$scope.summarySections = {}
+	$scope.summarySections = {};
 	
-	$scope.dataTypeOptions = [
-				{dataType : 'int', display_value : 'Integer'},       
-				{dataType : 'float', display_value : 'Float'},
-				{dataType : 'string', display_value : 'Text'},
-				{dataType : 'boolean', display_value : 'Boolean'},
-				{dataType : 'date', display_value : 'Date'}
+	$scope.data_typeOptions = [
+				{data_type : 'int', display_value : 'Integer'},       
+				{data_type : 'float', display_value : 'Float'},
+				{data_type : 'string', display_value : 'Text'},
+				{data_type : 'boolean', display_value : 'Boolean'},
+				{data_type : 'date', display_value : 'Date'}
 			];
 			
 	$scope.transform_methodOptions = [
@@ -49,7 +49,7 @@ function ReportController($scope) {
 				$scope.variables[$scope.newVariableName] = { 
 					name: $scope.newVariableName, 
 					isTransform : false, 
-					dataType: 'int'
+					data_type: 'int'
 				};
 				$scope.newVariableName = null;
 			}
@@ -119,6 +119,18 @@ function ReportController($scope) {
 		newSummaryVariableName = null;
 	}
 	
+	// upload a paper pusher report recipe json file
+	set_uploaded_json_file_contents = function(contents){
+		$scope.$apply(function() {
+			var uploaded_json_file = $.parseJSON(contents);
+			$scope.formReportName = uploaded_json_file.name;
+			$scope.formDescriptionText = uploaded_json_file.description;
+			$scope.variables = uploaded_json_file.variables;
+			$scope.groups = uploaded_json_file.groups;
+			$scope.summarySections = uploaded_json_file.summary_sections;
+		});
+	}
+	
 	$scope.save = function() {
 		// set the basic properties
 		$scope.reportName = $scope.formReportName;
@@ -138,5 +150,4 @@ function ReportController($scope) {
 		window.location.href = "data:text;base64," + jsonDownload;
 		document.location = 'data:Application/octet-stream,' + encodeURIComponent(jsonDownload);
 	};
-	
 }
