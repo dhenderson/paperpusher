@@ -4,7 +4,7 @@
 		
 		
 		<script src="js/libs/jquery.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+		<script src="js/libs/angular.min.js"></script>
 		<script src="js/libs/bootstrap.js"></script>
 		<script src="js/controllers.js"></script>
 		<link rel="stylesheet" href="css/bootstrap.css">
@@ -22,12 +22,11 @@
 						<li class="active">
 							<a href="#report-properties" data-toggle="tab">
 								Describe the report 
-							<span class="pp-done" ng-show="formReportName != null && formDescriptionText != null">&#x2713;</span>	
 							</a>
 						</li>
 						<li>
 							<a href="#variables" data-toggle="tab">
-								<span class="pp-done" ng-show="variables.length > 0">&#x2713;</span>	
+								Add variables
 							</a>
 						</li>
 						<li><a href="#transform-variables" data-toggle="tab">Create new variables</a></li>
@@ -42,6 +41,7 @@
 				<div class="tab-content right-content">					
 					<div id="report-properties" class="tab-pane active">
 						<h1>Report properties</h1>
+						
 						<label>Report name</label> 
 						<input type="text" ng-model="formReportName" ng-model-instant></input>
 						
