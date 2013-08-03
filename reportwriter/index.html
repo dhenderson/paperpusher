@@ -1,8 +1,5 @@
 <html ng-app>
 	<head>
-		<!--<script src="js/libs/angular.min.js"></script>-->
-		
-		
 		<script src="js/libs/jquery.js"></script>
 		<script src="js/libs/angular.min.js"></script>
 		<script src="js/libs/bootstrap.js"></script>
@@ -82,7 +79,7 @@
 								<td>
 									<select ng-model="variable.data_type" ng-options="item.data_type as item.display_value for item in data_typeOptions"></select>
 								</td>
-								<td><button class="btn" ng-click="removeVariable(variable.name)">Remove {{variable.name}}</button></td>
+								<td><button class="btn" ng-click="removeVariable(variable.name)">Remove</button></td>
 							</tr>
 						</table>
 					</div>
@@ -132,7 +129,7 @@
 								<td>
 									<input type="text" ng-model="variable.transform_definition.arguments[0]" ng-model-instant></input>
 								</td>
-								<td><button class="btn" ng-click="removeVariable(variable.name)">Remove {{variable.name}}</button></td>
+								<td><button class="btn" ng-click="removeVariable(variable.name)">Remove</button></td>
 							</tr>
 						</table>
 					</div>
@@ -165,7 +162,7 @@
 								<td>
 									<input type="text" ng-model="group.variable_values[0]" ng-model-instant></input>
 								</td>
-								<td><button class="btn" ng-click="removeGroup(group.name)">Remove {{group.name}}</button></td>
+								<td><button class="btn" ng-click="removeGroup(group.name)">Remove</button></td>
 							</tr>
 						</table>
 					</div>
@@ -182,7 +179,7 @@
 							</tr>
 							<tr ng-repeat="summarySection in summarySections" class="summary-section">
 								<td>{{summarySection.name}}</td>
-								<td><button class="btn" ng-click="removeSummarySection(summarySection.name)">Remove {{summarySection.name}}</button></td>
+								<td><button class="btn" ng-click="removeSummarySection(summarySection.name)">Remove</button></td>
 							</tr>
 						</table>
 					</div>
@@ -209,7 +206,10 @@
 										</select>
 									</td>
 									<td>
-										<select ng-model="summary_variable.methods[0]" ng-options="item.method as item.display_value for item in summaryMethodOptions"></select>
+										<label ng-repeat="method in summaryMethodOptions">
+											<input type="checkbox" ng-model="summary_variable.methods">
+											<span>{{method.method}}</span>
+										</label>
 									</td>
 									<td>
 										<select ng-model="summary_variable.groups[0]">

@@ -107,6 +107,9 @@ function ReportController($scope) {
 		delete $scope.summarySections[summarySectionName];
 	}
 	
+	/**
+	* Adds a new summary variable
+	**/
 	$scope.addSummaryVariable = function(newSummaryVariableName, summarySectionName) {
 	
 		$scope.summarySections[summarySectionName]['summary_variables'][newSummaryVariableName] = {
@@ -117,6 +120,10 @@ function ReportController($scope) {
 		};
 		
 		newSummaryVariableName = null;
+	}
+	
+	$scope.addSummaryVariableMethodCheckbox = function() {
+		
 	}
 	
 	// upload a paper pusher report recipe json file
