@@ -180,7 +180,7 @@ class Report():
 						
 					row_num = row_num + 1
 				
-				row_num = row_num + 2
+				row_num = row_num + 1
 				
 			# charts
 			for chart in summary_section.charts:

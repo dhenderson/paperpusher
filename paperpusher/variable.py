@@ -46,8 +46,6 @@ class SummaryVariable():
 		# apply groups
 		data_frame = self.apply_group(data_frame, group)
 		
-		print("Apply method for: " + self.name)
-		
 		if method_name == "min":
 			return self.min(data_frame)
 		elif method_name == "max":

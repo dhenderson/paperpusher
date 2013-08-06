@@ -29,7 +29,7 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 			path_to_input_csv_file: path to the csv file we are appending to the master csv
 			path_to_master_csv_file: path to the master csv file the first inputted csv is being appended to
 			report: A paperpusher.models.Report object defining the variables to be pulled from the inputted csv
-			additional_cell_values: A list of additional cell value constants to be added at the end of each row entry
+			additional_cell_values: [dictionary] A map of additional cell value constants in the form {variable_name : variable_value}
 	"""
 
 	input_csv_file = open(path_to_input_csv_file, 'r')
@@ -58,7 +58,13 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 				if not variable.is_transform:
 					# get the column number and variable name mapping for the csv file
 					input_csv_col_num = input_csv_header_column_numbers[variable.name]
-					cell_value = input_csv_file_row[input_csv_col_num]
+					
+					# if the variable is an additional cell value, pass that instead of 
+					# looking up a value from the spreadsheet
+					if variable.name in additional_cell_values:
+						cell_value = additional_cell_values[variable.name]
+					else:
+						cell_value = input_csv_file_row[input_csv_col_num]
 					
 				# transform variable
 				else:
@@ -109,9 +115,6 @@ def append_csv_to_master_csv(path_to_input_csv_file, path_to_master_csv_file, re
 				# insert the cell value in the proper CSV column
 				master_row_insert.insert(master_csv_col_num, cell_value)
 			
-			for additional_cell_value in additional_cell_values:
-				master_row_insert.append(additional_cell_value)
-			
 			# write the row to the master csv
 			master_csv_writer.writerow(master_row_insert)
 
@@ -129,10 +132,7 @@ def generate_csv_file_with_headers(path_to_csv_file, report):
 	for variable in report.variables:
 		# only add the variable if it's not going to be added as an additional header name
 		if variable.name not in report.additional_header_names:
-			print("Adding: " + variable.name)
 			csv_headers.append(variable.name)
-		else:
-			print("Not adding: " + variable.name) #TODO: You are here
 		
 	for additional_header_name in report.additional_header_names:
 		csv_headers.append(additional_header_name)
@@ -260,7 +260,7 @@ class CsvFileContainer():
 	
 	def __init__(self, path, additional_cell_values = None):
 		self.path = path
-		self.additional_cell_values = additional_cell_values # list of cell values to append as extra columns at the end of each row
+		self.additional_cell_values = additional_cell_values # a map of additional cell value consents in the form {variable_name, variable_value}
 		
 class ExcelWorksheetContainer():	
 	
