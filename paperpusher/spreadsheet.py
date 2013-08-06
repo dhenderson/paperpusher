@@ -9,8 +9,8 @@ def generate_master_csv(report, csv_file_containers):
 	pulling the variables specified by the Report object
 	"""
 	
-	# generate a new csv file with the headers from the report
-	master_csv_file = generate_csv_file_with_headers(report.path_to_master_csv_file, report)
+	# write a new csv file with the headers from the report
+	generate_csv_file_with_headers(report.path_to_master_csv_file, report)
 	
 	for csv_file_container in csv_file_containers:
 	
@@ -127,7 +127,12 @@ def generate_csv_file_with_headers(path_to_csv_file, report):
 	csv_headers = []
 	
 	for variable in report.variables:
-		csv_headers.append(variable.name)
+		# only add the variable if it's not going to be added as an additional header name
+		if variable.name not in report.additional_header_names:
+			print("Adding: " + variable.name)
+			csv_headers.append(variable.name)
+		else:
+			print("Not adding: " + variable.name) #TODO: You are here
 		
 	for additional_header_name in report.additional_header_names:
 		csv_headers.append(additional_header_name)
