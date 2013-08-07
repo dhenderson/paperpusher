@@ -192,16 +192,16 @@ function ReportController($scope) {
 	/**
 	* Adds a new objective
 	**/
-	$scope.addObjective = function(summarySectionName) {
-		$scope.summarySections[summarySectionName]['objectives'][$scope.newObjectiveName] = {
-			name : $scope.newObjectiveName,
+	$scope.addObjective = function(newObjectiveName, summarySectionName) {
+		$scope.summarySections[summarySectionName]['objectives'][newObjectiveName] = {
+			name : newObjectiveName,
 			group : null,
 			method : null,
 			objective_values : [],
 			objective_must_be : null,
 			summary_variable : null
 		};
-		$scope.newObjectiveName = null;
+		newObjectiveName = null;
 	}
 	
 	$scope.removeObjective = function(objectiveName, summarySectionName) {
