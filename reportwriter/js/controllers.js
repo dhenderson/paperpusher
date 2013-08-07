@@ -122,8 +122,90 @@ function ReportController($scope) {
 		newSummaryVariableName = null;
 	}
 	
-	$scope.addSummaryVariableMethodCheckbox = function() {
+	/**
+	* If the method for a summary variable is in the methods list, remove it 
+	* and set the checkbox to unchecked. Otherwise, set the checkbox to 
+	* checked and add the method to the methods list.
+	**/
+	$scope.toggle_summary_variable_method = function(method_name, summary_section_name, summary_variable_name, checkbox) {
+		var methods = $scope.summarySections[summary_section_name]['summary_variables'][summary_variable_name]['methods'];
 		
+		var method_in_list = false;
+		for (var i=methods.length-1; i>=0; i--) {
+			if (methods[i] === method_name) {
+				methods.splice(i, 1);
+				method_in_list = true;
+			}
+		}
+		if (method_in_list) {
+			checkbox.checked=false;
+		}
+		else {
+			methods.push(method_name)
+			checkbox.checked=true;
+		}
+	}
+	
+	$scope.toggle_summary_variable_group = function(group_name, summary_section_name, summary_variable_name, checkbox) {
+		
+		// add 'groups' if it's not in there
+		if ('groups' in $scope.summarySections[summary_section_name]['summary_variables'][summary_variable_name]) {}
+		else{
+			$scope.summarySections[summary_section_name]['summary_variables'][summary_variable_name]['groups'] = [];
+		}
+		
+		var groups = $scope.summarySections[summary_section_name]['summary_variables'][summary_variable_name]['groups'];
+		
+		var group_in_list = false;
+		for (var i=groups.length-1; i>=0; i--) {
+			if (groups[i] === group_name) {
+				groups.splice(i, 1);
+				group_in_list = true;
+			}
+		}
+		if (group_in_list) {
+			checkbox.checked=false;
+		}
+		else {
+			groups.push(group_name)
+			checkbox.checked=true;
+		}
+		
+		alert(groups);
+	}
+	
+	/**
+	* Returns true if the passed value is in the array. Otherwise returns false.
+	**/
+	$scope.is_value_in_array = function(value, array){
+		try {
+			for (var i=array.length-1; i>=0; i--) {
+				if (array[i] === value) {
+					return true;
+				}
+			}
+		}
+		catch(err){return false}
+		return false;
+	}
+	
+	/**
+	* Adds a new objective
+	**/
+	$scope.addObjective = function(summarySectionName) {
+		$scope.summarySections[summarySectionName]['objectives'][$scope.newObjectiveName] = {
+			name : $scope.newObjectiveName,
+			group : null,
+			method : null,
+			objective_values : [],
+			objective_must_be : null,
+			summary_variable : null
+		};
+		$scope.newObjectiveName = null;
+	}
+	
+	$scope.removeObjective = function(objectiveName, summarySectionName) {
+		delete $scope.summarySections[summarySectionName]['objectives'][objectiveName];
 	}
 	
 	// upload a paper pusher report recipe json file

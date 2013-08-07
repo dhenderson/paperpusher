@@ -207,16 +207,19 @@
 									</td>
 									<td>
 										<label ng-repeat="method in summaryMethodOptions">
-											<input type="checkbox" ng-model="summary_variable.methods">
+											<input type="checkbox" 
+												ng-click="toggle_summary_variable_method(method.method, summarySection.name, summary_variable.name, this)"
+												ng-checked="is_value_in_array(method.method, summary_variable.methods)">
 											<span>{{method.method}}</span>
 										</label>
 									</td>
 									<td>
-										<select ng-model="summary_variable.groups[0]">
-											<option ng-repeat="group_option in groups" value="{{group.name}}" ng-selected="group_option.name == summary_variable.groups[0]">
-												{{group_option.name}}
-											</option>
-										</select>
+										<label ng-repeat="group in groups">
+											<input type="checkbox" 
+												ng-click="toggle_summary_variable_group(group.name, summarySection.name, summary_variable.name, this)"
+												ng-checked="is_value_in_array(group.name, summary_variable.groups)">
+											<span>{{group.name}}</span>
+										</label>
 									</td>
 								</tr>
 							</table>
@@ -224,6 +227,21 @@
 					</div>
 					<div id="objectives" class="tab-pane">
 						<h2>Objectives</h2>
+						<div ng-repeat="summarySection in summarySections">
+							<h3>{{summarySection.name}}</h3>
+							<input type="text" ng-model="newObjectiveName" ng-model-instant></input>
+							<button class="btn" ng-click="addObjective(summarySection.name)">Add objective</button>
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>Objective</th>
+									<th>Remove</th>
+								</tr>
+								<tr ng-repeat="objective in summarySection.objectives" class="objective">
+									<td>{{objective.name}}</td>
+									<td><button class="btn" ng-click="removeObjective(summarySection.name, objective.name)">Remove</button></td>
+								</tr>
+							</table>
+						</div>
 					</div>
 					<div id="graphs" class="tab-pane">
 						<h2>Graphs</h2>
