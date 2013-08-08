@@ -41,6 +41,14 @@ function ReportController($scope) {
 		{method: 'percent_of_average', display_value : 'Percent of average (var 1/var 2)'},
 	];
 	
+	$scope.chart_type_options = [
+		{type: 'bar', display_value : 'Bar chart'},
+		{type: 'column', display_value : 'Column chart'},
+		{type: 'pie', display_value : 'Pie chart'},
+		{type: 'line', display_value : 'Line graph'},
+		{type: 'scatter', display_value : 'Scatter plot'}
+	];
+	
 	/**
 	* Creates a new variable
 	**/
@@ -99,7 +107,9 @@ function ReportController($scope) {
 	$scope.addSummarySection = function() {
 		$scope.summarySections[$scope.newSummarySectionName] = {
 			name : $scope.newSummarySectionName,
-			summary_variables : {}
+			summary_variables : {},
+			objectives : {},
+			charts : {}
 		}
 		$scope.newSummarySectionName = null;
 	}
@@ -201,11 +211,49 @@ function ReportController($scope) {
 			objective_must_be : null,
 			summary_variable : null
 		};
-		newObjectiveName = null;
 	}
-	
 	$scope.removeObjective = function(objectiveName, summarySectionName) {
 		delete $scope.summarySections[summarySectionName]['objectives'][objectiveName];
+	}
+	
+	/**
+	* Adds a new graph
+	**/
+	$scope.addChart = function(new_chart_name, summary_section_name) {
+		// add 'charts' if it's not in there
+		if ('charts' in $scope.summarySections[summary_section_name]) {}
+		else{
+			$scope.summarySections[summary_section_name]['charts'] = {};
+		}
+		$scope.summarySections[summary_section_name]['charts'][new_chart_name] = {
+			name : new_chart_name,
+			type : null,
+			summary_variable : null,
+			method : null,
+			groups : ["_pp_all"]
+		};
+	}
+	$scope.removeChart = function(chart_name, summary_section_name) {
+		delete $scope.summarySections[summary_section_name]['charts'][chart_name];
+	}
+	
+	$scope.toggle_group_method = function(method_name, summary_section_name, chart_name, checkbox) {
+		var groups = $scope.summarySections[summary_section_name]['charts'][chart_name]['groups'];
+		
+		var group_in_list = false;
+		for (var i=groups.length-1; i>=0; i--) {
+			if (groups[i] === method_name) {
+				groups.splice(i, 1);
+				group_in_list = true;
+			}
+		}
+		if (group_in_list) {
+			checkbox.checked=false;
+		}
+		else {
+			groups.push(method_name)
+			checkbox.checked=true;
+		}
 	}
 	
 	// upload a paper pusher report recipe json file

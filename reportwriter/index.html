@@ -31,7 +31,7 @@
 						<li><a href="#summary-sections" data-toggle="tab">Summary sections</a></li>
 						<li><a href="#summary-variables" data-toggle="tab">Summary variables</a></li>
 						<li><a href="#objectives" data-toggle="tab">Objectives</a></li>
-						<li><a href="#graphs" data-toggle="tab">Graphs</a></li>
+						<li><a href="#charts" data-toggle="tab">Charts</a></li>
 						<li><a href="#finish" data-toggle="tab">Done!</a></li>
 					</ul>
 				</div>
@@ -252,15 +252,59 @@
 									<td>
 										<select ng-model="objective.method" ng-options="item.method as item.display_value for item in summaryMethodOptions"></select>
 									</td>
-									<td>{{objective.objective_must_be}}</td>
-									<td>{{objective.objective_values}}</td>
+									<td>
+										<select ng-model="objective.objective_must_be" ng-options="item.must_be as item.display_value for item in must_be_options"></select>
+									</td>
+									<td>
+										<input type="text" ng-model="objective.objective_values[0]" ng-model-instant></input>
+									</td>
 									<td><button class="btn" ng-click="removeObjective(objective.name, summarySection.name)">Remove</button></td>
 								</tr>
 							</table>
 						</div>
 					</div>
-					<div id="graphs" class="tab-pane">
-						<h2>Graphs</h2>
+					<div id="charts" class="tab-pane">
+						<h2>Charts</h2>
+						<div ng-repeat="summarySection in summarySections">
+							<input type="text" ng-model="newChartName" ng-model-instant></input>
+							<button class="btn" ng-click="addChart(newChartName, summarySection.name); newChartName=null;">Add chart</button>
+							<h3>{{summarySection.name}}</h3>
+							<table class="table table-striped table-bordered table-condensed">
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Summary variable</th>
+									<th>Method</th>
+									<th>Groups</th>
+									<th>Remove</th>
+								</tr>
+								<tr ng-repeat="chart in summarySection.charts" class="chart">
+									<td>{{chart.name}}</td>
+									<td>
+										<select ng-model="chart.type" ng-options="item.type as item.display_value for item in chart_type_options"></select>
+									</td>
+									<td>
+										<select ng-model="chart.summary_variable">
+											<option ng-repeat="summary_variable in summarySection.summary_variables" value="{{summary_variable.name}}" ng-selected="summary_variable.name == chart.summary_variable">
+												{{summary_variable.name}}
+											</option>
+										</select>
+									</td>
+									<td>
+										<select ng-model="chart.method" ng-options="item.method as item.display_value for item in summaryMethodOptions"></select>
+									</td>
+									<td>
+										<label ng-repeat="group in groups">
+											<input type="checkbox" 
+												ng-click="toggle_chart_group(group.name, summarySection.name, chart.name, this)"
+												ng-checked="is_value_in_array(group.name, chart.groups)">
+											<span>{{group.name}}</span>
+										</label>
+									</td>
+									<td><button class="btn" ng-click="removeChart(chart.name, summarySection.name)">Remove</button></td>
+								</tr>								
+							</table>
+						</div>
 					</div>
 					<div id="finish" class="tab-pane">
 						<h2>Done!</h2>
