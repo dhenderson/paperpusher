@@ -37,6 +37,7 @@ function ReportController($scope) {
 		{method: 'median', display_value : 'Median'},
 		{method: 'sum', display_value : 'Sum'},
 		{method: 'percent_of_obs', display_value : 'Percent of observations'},
+		{method: 'percent_of_group', display_value : 'Percent of group'},
 		{method: 'percent_of_sum', display_value : 'Percent of sum (var 1/var 2)'},
 		{method: 'percent_of_average', display_value : 'Percent of average (var 1/var 2)'},
 	];
@@ -56,7 +57,7 @@ function ReportController($scope) {
 		if(typeof $scope.variables[$scope.newVariableName] == 'undefined') {
 				$scope.variables[$scope.newVariableName] = { 
 					name: $scope.newVariableName, 
-					isTransform : false, 
+					is_transform : false, 
 					data_type: 'int'
 				};
 				$scope.newVariableName = null;
@@ -180,8 +181,6 @@ function ReportController($scope) {
 			groups.push(group_name)
 			checkbox.checked=true;
 		}
-		
-		alert(groups);
 	}
 	
 	/**
