@@ -43,6 +43,8 @@ class SummaryVariable():
 				the string, returns null.
 		"""
 		
+		# total number of observations before subsetting by applying group condition
+		total_num_observations = len(data_frame.index)
 		# apply groups
 		data_frame = self.apply_group(data_frame, group)
 		
@@ -61,7 +63,9 @@ class SummaryVariable():
 		elif method_name == "percent_of_average":
 			return self.percent_of_average(data_frame)
 		elif method_name == "percent_of_obs":
-			return self.percent_of_obs(data_frame)
+			return self.percent_of_obs(data_frame, total_num_observations)
+		elif method_name == "percent_of_group":
+			return self.percent_of_group(data_frame)
 			
 		return None
 		
@@ -106,6 +110,8 @@ class SummaryVariable():
 			return "Percent of " + self.variables[1]
 		elif method_name == "percent_of_obs":
 			return "Percent of observations"
+		elif method_name == "percent_of_group":
+			return "Percent of group"
 		
 		return method_name
 	
@@ -139,15 +145,25 @@ class SummaryVariable():
 		if (average_variable_two)*-1 > 0:
 			return (average_variable_one/average_variable_two)*100
 		return "---"
-		
-	def percent_of_obs(self, data_frame):
-		"""Returns the sum of variable[0] divided by the number of observations
+
+	def percent_of_obs(self, data_frame, total_num_observations):
+		"""Returns the sum of variable[0] divided by the total number of 
+			observations in the data frame before subsetting by groups
 		"""
 		sum_variable_one = data_frame[self.variables[0]].sum()
-		observations = len(data_frame.index)
 		
-		if observations > 0:
-			return (sum_variable_one/observations)*100
+		if total_num_observations > 0:
+			return (sum_variable_one/total_num_observations)*100
+		return "---"
+		
+	def percent_of_group(self, data_frame):
+		"""Returns the sum of variable[0] divided by the number of observations in the group
+		"""
+		sum_variable_one = data_frame[self.variables[0]].sum()
+		group_observations = len(data_frame.index)
+		
+		if group_observations > 0:
+			return (sum_variable_one/group_observations)*100
 		return "---"
 		
 class Group():

@@ -3,8 +3,8 @@ from paperpusher.report import Report, SummarySection, Objective, Chart
 from paperpusher.variable import BasicVariable, TransformVariable, SummaryVariable, Group
 
 
-# display value for the all observations group
-group_all_observations_display_name = "All observations"
+# value for the all observations group
+group_all_observations = "All observations"
 
 # Loads the json file at the specified path and returns 
 # the json data model as python lists and dictionaries
@@ -86,7 +86,7 @@ def load_report_from_json(path_to_json_file):
 			# attach groups to summary variables
 			if 'groups' in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]:
 				for group_name in json_data['summary_sections'][summary_section_name]['summary_variables'][summary_variable_name]['groups']:
-					if group_name == '_pp_all':
+					if group_name == 'group_all_observations':
 						group = create_all_group()
 					else:
 						group = report.groups[group_name]
@@ -111,9 +111,9 @@ def load_report_from_json(path_to_json_file):
 			for objective_name in json_data['summary_sections'][summary_section_name]['objectives']:
 				
 				if 'group' not in json_data['summary_sections'][summary_section_name]['objectives'][objective_name]:
-					group_name = '_pp_all'
+					group_name = group_all_observations
 					
-				if group_name == '_pp_all':
+				if group_name == group_all_observations:
 					group = create_all_group()
 				else:
 					group = report.groups[group_name]
@@ -143,9 +143,6 @@ def load_report_from_json(path_to_json_file):
 				group_names = []
 				
 				for group_name in json_data['summary_sections'][summary_section_name]['charts'][chart_name]['groups']:
-					if group_name == '_pp_all':
-						group_name = group_all_observations_display_name
-
 					group_names.append(group_name)
 					
 				chart = Chart(chart_name, summary_variable, method, type, group_names)
@@ -156,7 +153,7 @@ def load_report_from_json(path_to_json_file):
 	return report
 	
 def create_all_group():
-	name = group_all_observations_display_name
+	name = group_all_observations
 	variable_name = None
 	variable_must_be = None
 	variable_values = None
